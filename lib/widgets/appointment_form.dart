@@ -31,11 +31,10 @@ class _AppointmentFormState extends State<AppointmentForm> {
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   DateTime? _selectedDate;
-  late String _selectedDoctor ;
-  
+  late String _selectedDoctor;
 
   late String _selectedGender;
-  TimeOfDay? _selectedTime;
+  // TimeOfDay? _selectedTime;
 
   // functions for selecting date and time
   Future<void> _selectDate(BuildContext context) async {
@@ -51,15 +50,15 @@ class _AppointmentFormState extends State<AppointmentForm> {
     }
   }
 
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now());
-    if (picked != null) {
-      setState(() {
-        _selectedTime = picked;
-      });
-    }
-  }
+  // Future<void> _selectTime(BuildContext context) async {
+  //   final TimeOfDay? picked =
+  //       await showTimePicker(context: context, initialTime: TimeOfDay.now());
+  //   if (picked != null) {
+  //     setState(() {
+  //       _selectedTime = picked;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -238,20 +237,6 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           ),
                         ],
                       ),
-                      const SizedBox(width: 16.0),
-                      Column(
-                        children: [
-                          Text(
-                            'Selected Time: ${_selectedTime == null ? 'No time selected' : _selectedTime!.format(context)}',
-                            style: const TextStyle(fontSize: 16.0),
-                          ),
-                          const SizedBox(height: 16.0),
-                          ElevatedButton(
-                            child: const Text('Select Time'),
-                            onPressed: () => _selectTime(context),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                   const SizedBox(height: 10.0),
@@ -262,7 +247,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         child: const Text('Submit'),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
+                            // _formKey.currentState!.save();
                             final patient = Patient(
                               name: _nameController.text,
                               phone: int.parse(_phoneNumberController.text),
@@ -271,14 +256,17 @@ class _AppointmentFormState extends State<AppointmentForm> {
                               amountPaid:
                                   double.parse(_amountPaidController.text),
                               careOf: _careOfController.text,
-                              date: _selectedDate!,
-                              time: _selectedTime!.toString(),
+                              date: _selectedDate!.toIso8601String(),
                               doctor: _selectedDoctor,
                               gender: _selectedGender,
                             );
                             final box = Hive.box<Patient>('patients');
-                            box.add(patient);
 
+                            print(_selectedDoctor);
+                            print(_selectedGender);
+                            String s = _selectedDate!.toIso8601String();
+                            print(s);
+                            box.add(patient);
                             // Navigator.pop(context);
                           }
                         },

@@ -14,7 +14,7 @@ class Patient extends HiveObject {
     required this.amount,
     required this.amountPaid,
     required this.date,
-    required this.time,
+ 
   });
 
   @HiveField(1)
@@ -30,7 +30,7 @@ class Patient extends HiveObject {
   String careOf;
 
   @HiveField(8)
-  DateTime date;
+  String date;
 
   @HiveField(4)
   String doctor;
@@ -43,7 +43,4 @@ class Patient extends HiveObject {
 
   @HiveField(3)
   int phone;
-
-  @HiveField(9)
-  String time;
 }

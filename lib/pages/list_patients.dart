@@ -24,7 +24,8 @@ class PatientsList extends StatelessWidget {
               final patient = patients[index];
               return ListTile(
                 title: Text(patient.name),
-                subtitle: Text('Age: ${patient.age}'),
+                subtitle: Text(
+                    'Age: ${patient.age} -- Phone: ${patient.phone} -- Date: ${patient.date} -- Amount: ${patient.amount} -- Amount Paid: ${patient.amountPaid}  -- Doctor: ${patient.doctor} -- Care Of: ${patient.careOf}'),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
@@ -35,6 +36,7 @@ class PatientsList extends StatelessWidget {
             },
           );
         },
-      ),);
+      ),
+    );
   }
 }

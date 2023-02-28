@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'color_schemes.g.dart';
+import 'controllers/doctor_adapter.dart';
 import 'controllers/patient_adapter.dart';
+import 'models/doctor.dart';
 import 'models/patient.dart';
 import 'pages/home.dart';
 
 void main() async {
-
-    await Hive.initFlutter();
-  // Hive.registerAdapter(DoctorAdapter());
+  await Hive.initFlutter();
+  Hive.registerAdapter(DoctorAdapter());
   Hive.registerAdapter(PatientAdapter());
 
-  // await Hive.openBox<Doctor>('doctors');
   // await Hive.deleteBoxFromDisk('patients');
+  // await Hive.deleteBoxFromDisk('doctors');
+  await Hive.openBox<Doctor>('doctors');
   await Hive.openBox<Patient>('patients');
+
   runApp(const MainApp());
 }
 

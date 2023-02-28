@@ -1,10 +1,12 @@
-import 'package:hive_flutter/adapters.dart';
+
+
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../models/patient.dart';
 
 class PatientAdapter extends TypeAdapter<Patient> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
   Patient read(BinaryReader reader) {
@@ -15,8 +17,8 @@ class PatientAdapter extends TypeAdapter<Patient> {
       gender: reader.readString(),
       amount: reader.readDouble(),
       amountPaid: reader.readDouble(),
-      date: reader.read(),
-      time: reader.readString(),
+      date: reader.readString(),
+   
       doctor: reader.readString(),
       careOf: reader.readString(),
     );
@@ -32,7 +34,7 @@ class PatientAdapter extends TypeAdapter<Patient> {
     writer.writeString(obj.careOf);
     writer.writeDouble(obj.amount);
     writer.writeDouble(obj.amountPaid);
-    writer.write(obj.date);
-    writer.writeString(obj.time);
+    writer.writeString(obj.date);
+
   }
 }
