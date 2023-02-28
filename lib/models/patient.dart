@@ -1,8 +1,8 @@
-
 import 'package:hive/hive.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 1)
 class Patient extends HiveObject {
+
   // Constructor
   Patient({
     required this.name,

@@ -4,7 +4,7 @@ import '../models/patient.dart';
 
 class PatientAdapter extends TypeAdapter<Patient> {
   @override
-  final int typeId = 1;
+  final int typeId = 0;
 
   @override
   Patient read(BinaryReader reader) {
@@ -16,7 +16,7 @@ class PatientAdapter extends TypeAdapter<Patient> {
       amount: reader.readDouble(),
       amountPaid: reader.readDouble(),
       date: reader.read(),
-      time: reader.read(),
+      time: reader.readString(),
       doctor: reader.readString(),
       careOf: reader.readString(),
     );
@@ -33,7 +33,7 @@ class PatientAdapter extends TypeAdapter<Patient> {
     writer.writeDouble(obj.amount);
     writer.writeDouble(obj.amountPaid);
     writer.write(obj.date);
-    writer.write(obj.time);
+    writer.writeString(obj.time);
 
   }
 }

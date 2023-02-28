@@ -280,6 +280,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                             );
                             final box = Hive.box<Patient>('patients');
                             box.add(patient);
+
                             // Navigator.pop(context);
                           }
                         },
