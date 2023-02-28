@@ -28,15 +28,13 @@ class _AppointmentFormState extends State<AppointmentForm> {
 
   final _formKey = GlobalKey<FormState>();
   final List<String> _gender = ['Male', 'Female'];
-  late final _genderController = TextEditingController(text: _selectedGender);
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   DateTime? _selectedDate;
-  String _selectedDoctor = '';
-  late final _selectedDoctorController =
-      TextEditingController(text: _selectedDoctor);
+  late String _selectedDoctor ;
+  
 
-  String _selectedGender = 'Male';
+  late String _selectedGender;
   TimeOfDay? _selectedTime;
 
   // functions for selecting date and time
@@ -275,8 +273,8 @@ class _AppointmentFormState extends State<AppointmentForm> {
                               careOf: _careOfController.text,
                               date: _selectedDate!,
                               time: _selectedTime!.toString(),
-                              doctor: _selectedDoctorController.text,
-                              gender: _genderController.text,
+                              doctor: _selectedDoctor,
+                              gender: _selectedGender,
                             );
                             final box = Hive.box<Patient>('patients');
                             box.add(patient);

@@ -34,6 +34,5 @@ class PatientAdapter extends TypeAdapter<Patient> {
     writer.writeDouble(obj.amountPaid);
     writer.write(obj.date);
     writer.writeString(obj.time);
-
   }
 }
