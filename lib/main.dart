@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'color_schemes.g.dart';
-import 'controllers/doctor_adapter.dart';
-import 'controllers/patient_adapter.dart';
+
 import 'models/doctor.dart';
 import 'models/patient.dart';
 import 'pages/home.dart';
 
 void main() async {
-  await Hive.initFlutter();
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+
+  Hive.init(appDocumentDir.path);
   Hive.registerAdapter(DoctorAdapter());
   Hive.registerAdapter(PatientAdapter());
 

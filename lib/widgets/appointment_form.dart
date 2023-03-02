@@ -17,13 +17,13 @@ class _AppointmentFormState extends State<AppointmentForm> {
   final _amountPaidController = TextEditingController();
   final _careOfController = TextEditingController();
   final List<String> _doctors = [
-    'Dr. Sami',
-    'Dr. Umesh',
-    'Dr. Yasir',
-    'Dr. Babar',
-    'Dr. Talha',
-    'Dr. Mubashir',
-    'Dr. Inayat'
+    'Sami',
+    'Umesh',
+    'Yasir',
+    'Babar',
+    'Talha',
+    'Mubashir',
+    'Inayat'
   ];
 
   final _formKey = GlobalKey<FormState>();
@@ -247,7 +247,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         child: const Text('Submit'),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // _formKey.currentState!.save();
+                            _formKey.currentState!.save();
                             final patient = Patient(
                               name: _nameController.text,
                               phone: int.parse(_phoneNumberController.text),
@@ -256,16 +256,12 @@ class _AppointmentFormState extends State<AppointmentForm> {
                               amountPaid:
                                   double.parse(_amountPaidController.text),
                               careOf: _careOfController.text,
-                              date: _selectedDate!.toIso8601String(),
+                              appointmentDate: DateTime.now(),
                               doctor: _selectedDoctor,
                               gender: _selectedGender,
                             );
                             final box = Hive.box<Patient>('patients');
 
-                            print(_selectedDoctor);
-                            print(_selectedGender);
-                            String s = _selectedDate!.toIso8601String();
-                            print(s);
                             box.add(patient);
                             // Navigator.pop(context);
                           }

@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
 
+part 'doctor.g.dart';
+
 @HiveType(typeId: 1)
 class Doctor extends HiveObject {
   @HiveField(0)

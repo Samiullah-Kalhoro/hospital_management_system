@@ -1,8 +1,9 @@
 import 'package:hive/hive.dart';
 
-@HiveType(typeId: 1)
-class Patient extends HiveObject {
+part 'patient.g.dart';
 
+@HiveType(typeId: 0)
+class Patient extends HiveObject {
   // Constructor
   Patient({
     required this.name,
@@ -13,8 +14,7 @@ class Patient extends HiveObject {
     required this.careOf,
     required this.amount,
     required this.amountPaid,
-    required this.date,
- 
+    required this.appointmentDate,
   });
 
   @HiveField(1)
@@ -30,7 +30,7 @@ class Patient extends HiveObject {
   String careOf;
 
   @HiveField(8)
-  String date;
+  DateTime appointmentDate;
 
   @HiveField(4)
   String doctor;
@@ -43,4 +43,5 @@ class Patient extends HiveObject {
 
   @HiveField(3)
   int phone;
+
 }
