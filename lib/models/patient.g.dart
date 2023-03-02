@@ -26,13 +26,14 @@ class PatientAdapter extends TypeAdapter<Patient> {
       amount: fields[6] as double,
       amountPaid: fields[7] as double,
       appointmentDate: fields[8] as DateTime,
+      reason: fields[9] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Patient obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(1)
       ..write(obj.age)
       ..writeByte(6)
@@ -50,7 +51,9 @@ class PatientAdapter extends TypeAdapter<Patient> {
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(3)
-      ..write(obj.phone);
+      ..write(obj.phone)
+      ..writeByte(9)
+      ..write(obj.reason);
   }
 
   @override

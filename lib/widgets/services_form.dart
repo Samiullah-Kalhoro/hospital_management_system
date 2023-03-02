@@ -1,65 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
-// import 'package:intl/intl.dart';
 
-import '../models/patient.dart';
-
-class AppointmentForm extends StatefulWidget {
-  const AppointmentForm({super.key});
+class ServicesForm extends StatefulWidget {
+  const ServicesForm({super.key});
 
   @override
-  State<AppointmentForm> createState() => _AppointmentFormState();
+  State<ServicesForm> createState() => _ServicesFormState();
 }
 
-class _AppointmentFormState extends State<AppointmentForm> {
-  final _ageController = TextEditingController();
-  final _amountController = TextEditingController();
-  final _amountPaidController = TextEditingController();
-  final _careOfController = TextEditingController();
-  final List<String> _doctors = [
-    'Sami',
-    'Umesh',
-    'Yasir',
-    'Babar',
-    'Talha',
-    'Mubashir',
-    'Inayat'
+class _ServicesFormState extends State<ServicesForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  final List<String> _services = [
+    'XRay',
+    'First Aid',
+    'ECG',
+    'Ultrasound',
   ];
 
-  final _formKey = GlobalKey<FormState>();
   final List<String> _gender = ['Male', 'Female'];
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
-  final _reasonController = TextEditingController();
-  // DateTime? _selectedDate;
-  late String _selectedDoctor;
-
+  final _ageController = TextEditingController();
+  final _amountController = TextEditingController();
   late String _selectedGender;
-  // TimeOfDay? _selectedTime;
-
-  // functions for selecting date and time
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //       context: context,
-  //       initialDate: DateTime.now(),
-  //       firstDate: DateTime.now(),
-  //       lastDate: DateTime(2100));
-  //   if (picked != null) {
-  //     setState(() {
-  //       _selectedDate = picked;
-  //     });
-  //   }
-  // }
-
-  // Future<void> _selectTime(BuildContext context) async {
-  //   final TimeOfDay? picked =
-  //       await showTimePicker(context: context, initialTime: TimeOfDay.now());
-  //   if (picked != null) {
-  //     setState(() {
-  //       _selectedTime = picked;
-  //     });
-  //   }
-  // }
+  late String _selectedService;
 
   @override
   Widget build(BuildContext context) {
@@ -155,48 +119,28 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     children: [
                       Expanded(
                         child: DropdownButtonFormField(
-                          decoration:
-                              const InputDecoration(labelText: 'Select Doctor'),
-                          items: _doctors.map((doctor) {
+                          decoration: const InputDecoration(
+                              labelText: 'Select Service'),
+                          items: _services.map((service) {
                             return DropdownMenuItem(
-                              value: doctor,
-                              child: Text(doctor),
+                              value: service,
+                              child: Text(service),
                             );
                           }).toList(),
                           validator: (value) {
                             if (value == null) {
-                              return 'Please select a doctor';
+                              return 'Please select a service';
                             }
                             return null;
                           },
                           onChanged: (value) {
                             setState(() {
-                              _selectedDoctor = value!;
+                              _selectedService = value!;
                             });
                           },
                         ),
                       ),
                       const SizedBox(width: 16.0),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _careOfController,
-                          keyboardType: TextInputType.name,
-                          decoration:
-                              const InputDecoration(labelText: 'Care of'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _reasonController,
-                          keyboardType: TextInputType.name,
-                          decoration:
-                              const InputDecoration(labelText: 'Reason'),
-                        ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 16.0),
@@ -218,19 +162,6 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       const SizedBox(
                         width: 16.0,
                       ),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _amountPaidController,
-                          decoration:
-                              const InputDecoration(labelText: 'Amount Paid'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter Paid Amount!';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 10.0),
@@ -242,21 +173,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            final patient = Patient(
-                              name: _nameController.text,
-                              phone: int.parse(_phoneNumberController.text),
-                              age: int.parse(_ageController.text),
-                              amount: double.parse(_amountController.text),
-                              amountPaid:
-                                  double.parse(_amountPaidController.text),
-                              careOf: _careOfController.text,
-                              appointmentDate: DateTime.now(),
-                              doctor: _selectedDoctor,
-                              gender: _selectedGender,
-                              reason: _reasonController.text,
-                            );
-                            final box = Hive.box<Patient>('patients');
-                            box.add(patient);
+                            //Adding Service
                           }
                         },
                       ),
