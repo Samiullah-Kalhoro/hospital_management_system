@@ -21,13 +21,14 @@ class DoctorAdapter extends TypeAdapter<Doctor> {
       specialization: fields[1] as String,
       phone: fields[2] as String,
       email: fields[3] as String,
+      gender: fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Doctor obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class DoctorAdapter extends TypeAdapter<Doctor> {
       ..writeByte(2)
       ..write(obj.phone)
       ..writeByte(3)
-      ..write(obj.email);
+      ..write(obj.email)
+      ..writeByte(4)
+      ..write(obj.gender);
   }
 
   @override

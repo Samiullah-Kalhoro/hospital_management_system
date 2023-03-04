@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 // import 'package:intl/intl.dart';
 
+import '../models/doctor.dart';
 import '../models/patient.dart';
 
 class AppointmentForm extends StatefulWidget {
@@ -25,6 +26,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
     'Mubashir',
     'Inayat'
   ];
+
 
   final _formKey = GlobalKey<FormState>();
   final List<String> _gender = ['Male', 'Female'];
@@ -63,6 +65,10 @@ class _AppointmentFormState extends State<AppointmentForm> {
 
   @override
   Widget build(BuildContext context) {
+       final doctorsBox = Hive.box<Doctor>('doctors');
+    final List<String> doctorNames =
+        doctorsBox.values.map((e) => e.name).toList();
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -157,7 +163,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         child: DropdownButtonFormField(
                           decoration:
                               const InputDecoration(labelText: 'Select Doctor'),
-                          items: _doctors.map((doctor) {
+                          items: doctorNames.map((doctor) {
                             return DropdownMenuItem(
                               value: doctor,
                               child: Text(doctor),

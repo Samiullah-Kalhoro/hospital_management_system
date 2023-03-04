@@ -16,11 +16,15 @@ class Doctor extends HiveObject {
   @HiveField(3)
   String email;
 
+  @HiveField(4)
+  String gender;
+
   // Constructor
   Doctor({
     required this.name,
     required this.specialization,
     required this.phone,
     required this.email,
+    required this.gender,
   });
 }

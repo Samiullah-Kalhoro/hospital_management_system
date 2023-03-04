@@ -20,6 +20,8 @@ void main() async {
   await Hive.openBox<Doctor>('doctors');
   await Hive.openBox<Patient>('patients');
 
+  
+
   runApp(const MainApp());
 }
 

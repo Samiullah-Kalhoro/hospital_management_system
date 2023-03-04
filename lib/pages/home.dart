@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hospital_management_system/pages/appointments.dart';
 import 'package:ionicons/ionicons.dart';
 
-import 'list_patients.dart';
+import 'admin_panel.dart';
 import 'overview.dart';
 
 class Home extends StatefulWidget {
@@ -16,7 +16,7 @@ class _HomeState extends State<Home> {
   static List<Widget> pages = [
     const Overview(),
     const Appointments(),
-    const PatientsList(),
+    const AdminPanel(),
   ];
 
   int _selectedIndex = 0;
@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
                   selectedColor: Theme.of(context).colorScheme.secondary,
                   style: ListTileStyle.drawer,
                   horizontalTitleGap: 1,
-                  leading: const Icon(Ionicons.home),
+                  leading: const Icon(Icons.home),
                   title: const Text('Overview'),
                   selected: _selectedIndex == 0,
                   onTap: () => _onPageTap(0),
@@ -69,12 +69,12 @@ class _HomeState extends State<Home> {
                   selected: _selectedIndex == 1,
                   onTap: () => _onPageTap(1),
                 ),
-                             ListTile(
+                ListTile(
                   selectedColor: Theme.of(context).colorScheme.secondary,
                   style: ListTileStyle.drawer,
                   horizontalTitleGap: 1,
-                  leading: const Icon(Ionicons.list),
-                  title: const Text('Patients List'),
+                  leading: const Icon(Icons.admin_panel_settings),
+                  title: const Text('Admin Panel'),
                   selected: _selectedIndex == 2,
                   onTap: () => _onPageTap(2),
                 ),

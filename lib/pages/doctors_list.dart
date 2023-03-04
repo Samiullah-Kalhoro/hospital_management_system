@@ -8,6 +8,12 @@ class DoctorListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final doctorsBox = Hive.box<Doctor>('doctors');
+    // final List<String> doctorNames =
+    //     doctorsBox.values.map((e) => e.name).toList();
+
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Doctor List'),
@@ -39,7 +45,7 @@ class DoctorListScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const AddDoctorScreen(),
+              builder: (context) => const DoctorsList(),
             ),
           );
         },
@@ -62,7 +68,6 @@ class DoctorListScreen extends StatelessWidget {
           ),
           TextButton(
             child: const Text('Delete'),
-           
             onPressed: () {
               deleteDoctor(index);
               Navigator.pop(context);
@@ -79,20 +84,22 @@ class DoctorListScreen extends StatelessWidget {
   }
 }
 
-
-class AddDoctorScreen extends StatefulWidget {
-  const AddDoctorScreen({super.key});
+class DoctorsList extends StatefulWidget {
+  const DoctorsList({super.key});
 
   @override
-  State<AddDoctorScreen> createState() => _AddDoctorScreenState();
+  State<DoctorsList> createState() => _DoctorsListState();
 }
 
-class _AddDoctorScreenState extends State<AddDoctorScreen> {
+class _DoctorsListState extends State<DoctorsList> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _specializationController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
+
+  late String _selectedGender;
+  final List<String> _gender = ['Male', 'Female'];
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +108,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
         title: const Text('Add Doctor'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(50.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -136,6 +143,26 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                   return null;
                 },
               ),
+              DropdownButtonFormField(
+                decoration: const InputDecoration(labelText: 'Select Gender'),
+                items: _gender.map((gender) {
+                  return DropdownMenuItem(
+                    value: gender,
+                    child: Text(gender),
+                  );
+                }).toList(),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please select a gender';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGender = value!;
+                  });
+                },
+              ),
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
@@ -156,10 +183,10 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                       specialization: _specializationController.text,
                       phone: _phoneController.text,
                       email: _emailController.text,
+                      gender: _selectedGender,
                     );
                     final box = Hive.box<Doctor>('doctors');
                     box.add(doctor);
-                    Navigator.pop(context);
                   }
                 },
               ),
