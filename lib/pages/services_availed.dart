@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hospital_management_system/models/patient.dart';
 
-class PatientsList extends StatefulWidget {
-  const PatientsList({super.key});
+
+import '../models/service_appointment.dart';
+
+class ServicesAvailed extends StatefulWidget {
+  const ServicesAvailed({super.key});
 
   @override
-  State<PatientsList> createState() => _PatientsListState();
+  State<ServicesAvailed> createState() => _ServicesAvailedState();
 }
 
-class _PatientsListState extends State<PatientsList> {
+class _ServicesAvailedState extends State<ServicesAvailed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Patients List'),
+        title: const Text('Services Availed'),
       ),
-      body: ValueListenableBuilder<Box<Patient>>(
-        valueListenable: Hive.box<Patient>('patients').listenable(),
+      body: ValueListenableBuilder<Box<ServiceAppointment>>(
+        valueListenable: Hive.box<ServiceAppointment>('serviceAppointments').listenable(),
         builder: (context, box, _) {
           return ListView.builder(
             itemCount: box.length,
             itemBuilder: (context, index) {
-              final patient = box.getAt(index);
-              final patientIndex = patient!.key;
+              final services = box.getAt(index);
+              final serviceIndex = services!.key;
               return ListTile(
-                leading: Text((patientIndex + 1).toString()),
-                title: Text(patient.name),
-                subtitle: Text(patient.age.toString()),
+                leading: Text((serviceIndex + 1).toString()),
+                title: Text(services.selectedService),
+                subtitle: Text(services.name.toString()),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
@@ -47,8 +49,8 @@ void showDeleteDialog(BuildContext context, int index) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Delete Patient?'),
-      content: const Text('Are you sure you want to delete this patient?'),
+      title: const Text('Delete Availed Service?'),
+      content: const Text('Are you sure you want to delete this Availed Service?'),
       actions: [
         TextButton(
           child: const Text('Cancel'),
@@ -69,6 +71,6 @@ void showDeleteDialog(BuildContext context, int index) {
 }
 
 void deletePatient(int index) {
-  final box = Hive.box<Patient>('patients');
+  final box = Hive.box<ServiceAppointment>('serviceAppointments');
   box.deleteAt(index);
 }

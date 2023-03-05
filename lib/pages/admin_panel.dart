@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'doctors_list.dart';
 import 'patients_list.dart';
+import 'services_availed.dart';
 import 'services_list.dart';
 
 class AdminPanel extends StatefulWidget {
@@ -17,7 +18,7 @@ class _AdminPanelState extends State<AdminPanel> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -28,13 +29,16 @@ class _AdminPanelState extends State<AdminPanel> with TickerProviderStateMixin {
           controller: _tabController,
           tabs: const [
             Tab(
-              text: 'Doctors List',
+              text: 'Doctors',
             ),
             Tab(
-              text: 'Services List',
+              text: 'Services',
             ),
             Tab(
-              text: 'Patients List',
+              text: 'Patients Appointed',
+            ),
+            Tab(
+              text: 'Services Availed',
             ),
           ],
         ),
@@ -43,8 +47,9 @@ class _AdminPanelState extends State<AdminPanel> with TickerProviderStateMixin {
         controller: _tabController,
         children: const [
           DoctorListScreen(),
-          ServicesList(),
+          ServicesListScreen(),
           PatientsList(),
+          ServicesAvailed(),
         ],
       ),
     );

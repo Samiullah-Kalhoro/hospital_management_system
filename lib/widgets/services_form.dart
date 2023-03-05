@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hospital_management_system/models/service_appointment.dart';
+
+import '../models/service.dart';
 
 class ServicesForm extends StatefulWidget {
   const ServicesForm({super.key});
@@ -10,13 +14,6 @@ class ServicesForm extends StatefulWidget {
 class _ServicesFormState extends State<ServicesForm> {
   final _formKey = GlobalKey<FormState>();
 
-  final List<String> _services = [
-    'XRay',
-    'First Aid',
-    'ECG',
-    'Ultrasound',
-  ];
-
   final List<String> _gender = ['Male', 'Female'];
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
@@ -27,6 +24,9 @@ class _ServicesFormState extends State<ServicesForm> {
 
   @override
   Widget build(BuildContext context) {
+    final serviceBox = Hive.box<Service>('service');
+    final List<String> serviceNames =
+        serviceBox.values.map((e) => e.serviceName).toList();
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -121,7 +121,7 @@ class _ServicesFormState extends State<ServicesForm> {
                         child: DropdownButtonFormField(
                           decoration: const InputDecoration(
                               labelText: 'Select Service'),
-                          items: _services.map((service) {
+                          items: serviceNames.map((service) {
                             return DropdownMenuItem(
                               value: service,
                               child: Text(service),
@@ -171,9 +171,21 @@ class _ServicesFormState extends State<ServicesForm> {
                       FilledButton(
                         child: const Text('Submit'),
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
+                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            //Adding Service
+                            final serviceAppointment = ServiceAppointment(
+                              name: _nameController.text,
+                              phone: int.parse(_phoneNumberController.text),
+                              age: int.parse(_ageController.text),
+                              amount: double.parse(_amountController.text),
+                              
+                              appointmentDate: DateTime.now(),
+                             
+                              gender: _selectedGender, selectedService: _selectedService,
+                            
+                            );
+                            final box = Hive.box<ServiceAppointment>('serviceAppointments');
+                            box.add(serviceAppointment);
                           }
                         },
                       ),

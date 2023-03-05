@@ -8,12 +8,6 @@ class DoctorListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final doctorsBox = Hive.box<Doctor>('doctors');
-    // final List<String> doctorNames =
-    //     doctorsBox.values.map((e) => e.name).toList();
-
-
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Doctor List'),
@@ -25,8 +19,10 @@ class DoctorListScreen extends StatelessWidget {
             itemCount: box.length,
             itemBuilder: (context, index) {
               final doctor = box.getAt(index);
+              final doctorIndex = doctor!.key;
               return ListTile(
-                title: Text(doctor!.name),
+                leading: Text((doctorIndex + 1).toString()),
+                title: Text(doctor.name),
                 subtitle: Text(doctor.specialization),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
@@ -186,6 +182,7 @@ class _DoctorsListState extends State<DoctorsList> {
                       gender: _selectedGender,
                     );
                     final box = Hive.box<Doctor>('doctors');
+
                     box.add(doctor);
                   }
                 },

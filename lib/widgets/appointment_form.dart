@@ -17,16 +17,6 @@ class _AppointmentFormState extends State<AppointmentForm> {
   final _amountController = TextEditingController();
   final _amountPaidController = TextEditingController();
   final _careOfController = TextEditingController();
-  final List<String> _doctors = [
-    'Sami',
-    'Umesh',
-    'Yasir',
-    'Babar',
-    'Talha',
-    'Mubashir',
-    'Inayat'
-  ];
-
 
   final _formKey = GlobalKey<FormState>();
   final List<String> _gender = ['Male', 'Female'];
@@ -65,7 +55,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
 
   @override
   Widget build(BuildContext context) {
-       final doctorsBox = Hive.box<Doctor>('doctors');
+    final doctorsBox = Hive.box<Doctor>('doctors');
     final List<String> doctorNames =
         doctorsBox.values.map((e) => e.name).toList();
 

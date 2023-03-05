@@ -6,6 +6,8 @@ import 'color_schemes.g.dart';
 
 import 'models/doctor.dart';
 import 'models/patient.dart';
+import 'models/service.dart';
+import 'models/service_appointment.dart';
 import 'pages/home.dart';
 
 void main() async {
@@ -14,11 +16,17 @@ void main() async {
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(DoctorAdapter());
   Hive.registerAdapter(PatientAdapter());
+  Hive.registerAdapter(ServiceAdapter());
+  Hive.registerAdapter(ServiceAppointmentAdapter());
 
   // await Hive.deleteBoxFromDisk('patients');
   // await Hive.deleteBoxFromDisk('doctors');
+  // await Hive.deleteBoxFromDisk('service');
+  // await Hive.deleteBoxFromDisk('serviceAppointments');
   await Hive.openBox<Doctor>('doctors');
   await Hive.openBox<Patient>('patients');
+  await Hive.openBox<Service>('service');
+  await Hive.openBox<ServiceAppointment>('serviceAppointments');
 
   
 
