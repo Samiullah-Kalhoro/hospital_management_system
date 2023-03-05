@@ -23,7 +23,7 @@ class ServiceAppointmentAdapter extends TypeAdapter<ServiceAppointment> {
       phone: fields[3] as int,
       selectedService: fields[4] as String,
       amount: fields[5] as double,
-      appointmentDate: fields[6] as DateTime,
+      serviceAvailedDate: fields[6] as String,
     );
   }
 
@@ -44,7 +44,7 @@ class ServiceAppointmentAdapter extends TypeAdapter<ServiceAppointment> {
       ..writeByte(5)
       ..write(obj.amount)
       ..writeByte(6)
-      ..write(obj.appointmentDate);
+      ..write(obj.serviceAvailedDate);
   }
 
   @override

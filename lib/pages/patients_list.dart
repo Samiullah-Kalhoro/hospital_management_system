@@ -27,7 +27,13 @@ class _PatientsListState extends State<PatientsList> {
               return ListTile(
                 leading: Text((patientIndex + 1).toString()),
                 title: Text(patient.name),
-                subtitle: Text(patient.age.toString()),
+                subtitle: Row(
+                  children: [
+                    Text(patient.age.toString()),
+                    Text(patient.gender),
+                    Text(patient.appointmentDate.toString()),
+                  ],
+                ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {

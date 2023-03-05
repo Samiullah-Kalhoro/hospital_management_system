@@ -12,7 +12,7 @@ class ServiceAppointment extends HiveObject {
     required this.phone,
     required this.selectedService,
     required this.amount,
-    required this.appointmentDate,
+    required this.serviceAvailedDate,
   });
 
   @HiveField(0)
@@ -34,5 +34,5 @@ class ServiceAppointment extends HiveObject {
   double amount;
 
   @HiveField(6)
-  DateTime appointmentDate;
+  String serviceAvailedDate;
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/intl.dart';
 // import 'package:intl/intl.dart';
 
 import '../models/doctor.dart';
@@ -90,6 +92,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       const SizedBox(width: 16.0),
                       Expanded(
                         child: TextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           controller: _ageController,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(labelText: 'Age'),
@@ -132,6 +137,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       const SizedBox(width: 16.0),
                       Expanded(
                         child: TextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           controller: _phoneNumberController,
                           keyboardType: TextInputType.phone,
                           decoration:
@@ -246,7 +254,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                               amountPaid:
                                   double.parse(_amountPaidController.text),
                               careOf: _careOfController.text,
-                              appointmentDate: DateTime.now(),
+                              appointmentDate: DateFormat.yMMMMd('en_US').format(DateTime.now()),
                               doctor: _selectedDoctor,
                               gender: _selectedGender,
                               reason: _reasonController.text,

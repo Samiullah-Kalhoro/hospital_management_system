@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../models/doctor.dart';
@@ -130,6 +131,9 @@ class _DoctorsListState extends State<DoctorsList> {
                 },
               ),
               TextFormField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 controller: _phoneController,
                 decoration: const InputDecoration(labelText: 'Phone'),
                 validator: (value) {
@@ -160,6 +164,7 @@ class _DoctorsListState extends State<DoctorsList> {
                 },
               ),
               TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {

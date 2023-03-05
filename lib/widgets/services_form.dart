@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hospital_management_system/models/service_appointment.dart';
+import 'package:intl/intl.dart';
 
 import '../models/service.dart';
 
@@ -58,6 +60,9 @@ class _ServicesFormState extends State<ServicesForm> {
                       const SizedBox(width: 16.0),
                       Expanded(
                         child: TextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           controller: _ageController,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(labelText: 'Age'),
@@ -100,6 +105,9 @@ class _ServicesFormState extends State<ServicesForm> {
                       const SizedBox(width: 16.0),
                       Expanded(
                         child: TextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           controller: _phoneNumberController,
                           keyboardType: TextInputType.phone,
                           decoration:
@@ -171,20 +179,19 @@ class _ServicesFormState extends State<ServicesForm> {
                       FilledButton(
                         child: const Text('Submit'),
                         onPressed: () {
-                           if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             final serviceAppointment = ServiceAppointment(
                               name: _nameController.text,
                               phone: int.parse(_phoneNumberController.text),
                               age: int.parse(_ageController.text),
                               amount: double.parse(_amountController.text),
-                              
-                              appointmentDate: DateTime.now(),
-                             
-                              gender: _selectedGender, selectedService: _selectedService,
-                            
+                              serviceAvailedDate: DateFormat.yMMMMd('en_US').format(DateTime.now()),
+                              gender: _selectedGender,
+                              selectedService: _selectedService,
                             );
-                            final box = Hive.box<ServiceAppointment>('serviceAppointments');
+                            final box = Hive.box<ServiceAppointment>(
+                                'serviceAppointments');
                             box.add(serviceAppointment);
                           }
                         },

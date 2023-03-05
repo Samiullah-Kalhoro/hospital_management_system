@@ -25,7 +25,7 @@ class PatientAdapter extends TypeAdapter<Patient> {
       careOf: fields[5] as String,
       amount: fields[6] as double,
       amountPaid: fields[7] as double,
-      appointmentDate: fields[8] as DateTime,
+      appointmentDate: fields[8] as String,
       reason: fields[9] as String,
     );
   }

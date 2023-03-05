@@ -23,6 +23,8 @@ void main() async {
   // await Hive.deleteBoxFromDisk('doctors');
   // await Hive.deleteBoxFromDisk('service');
   // await Hive.deleteBoxFromDisk('serviceAppointments');
+
+  
   await Hive.openBox<Doctor>('doctors');
   await Hive.openBox<Patient>('patients');
   await Hive.openBox<Service>('service');
