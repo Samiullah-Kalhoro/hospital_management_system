@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hospital_management_system/models/patient.dart';
+import 'package:intl/intl.dart';
 
 class PatientsList extends StatefulWidget {
   const PatientsList({super.key});
@@ -30,8 +31,14 @@ class _PatientsListState extends State<PatientsList> {
                 subtitle: Row(
                   children: [
                     Text(patient.age.toString()),
+                    const SizedBox(width: 10),
                     Text(patient.gender),
-                    Text(patient.appointmentDate.toString()),
+                    const SizedBox(width: 10),
+                    Text(DateFormat.yMMMMd().format(patient.appointmentDate)),
+                    const SizedBox(width: 10),
+                    Text('Token Number is ${patient.tokenNumber}'),
+                    const SizedBox(width: 10),
+                    Text('Phone Number is ${patient.phone}')
                   ],
                 ),
                 trailing: IconButton(

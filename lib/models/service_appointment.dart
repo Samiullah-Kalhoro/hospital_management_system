@@ -13,6 +13,7 @@ class ServiceAppointment extends HiveObject {
     required this.selectedService,
     required this.amount,
     required this.serviceAvailedDate,
+    required this.tokenNumber,
   });
 
   @HiveField(0)
@@ -35,4 +36,7 @@ class ServiceAppointment extends HiveObject {
 
   @HiveField(6)
   DateTime serviceAvailedDate;
+
+  @HiveField(7)
+  int tokenNumber;
 }

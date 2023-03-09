@@ -29,7 +29,8 @@ class _ServicesAvailedState extends State<ServicesAvailed> {
               return ListTile(
                 leading: Text((serviceIndex + 1).toString()),
                 title: Text(services.selectedService),
-                subtitle: Text(services.name.toString()),
+                subtitle: Text('Service Name is ${services.name} and Token Number is ${services.tokenNumber}'),
+
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {

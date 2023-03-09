@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hospital_management_system/models/service_appointment.dart';
 
-
 import '../models/service.dart';
 
 class ServicesForm extends StatefulWidget {
@@ -181,18 +180,28 @@ class _ServicesFormState extends State<ServicesForm> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
+
+                            final serviceBox =
+                                Hive.box<ServiceAppointment>('serviceAppointments');
+                            final currentDate = DateTime.now();
+                            final servicesForToday = serviceBox.values.where(
+                                (s) => s.serviceAvailedDate == currentDate);
+                            final tokenNumber = servicesForToday.isEmpty
+                                ? 1
+                                : servicesForToday.length + 1;
+
                             final serviceAppointment = ServiceAppointment(
                               name: _nameController.text,
                               phone: int.parse(_phoneNumberController.text),
                               age: int.parse(_ageController.text),
                               amount: double.parse(_amountController.text),
-                              serviceAvailedDate: DateTime.now(),
+                              serviceAvailedDate: currentDate,
                               gender: _selectedGender,
                               selectedService: _selectedService,
+                              tokenNumber: tokenNumber,
                             );
-                            final box = Hive.box<ServiceAppointment>(
-                                'serviceAppointments');
-                            box.add(serviceAppointment);
+
+                            serviceBox.add(serviceAppointment);
                             resetFields();
                           }
                         },

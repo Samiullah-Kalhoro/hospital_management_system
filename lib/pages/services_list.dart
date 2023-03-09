@@ -31,6 +31,7 @@ class _ServicesListScreenState extends State<ServicesListScreen> {
               final serviceIndex = service!.key;
               return ListTile(
                 leading: Text((serviceIndex + 1).toString()),
+                
                 title: Text(service.serviceName),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),

@@ -246,6 +246,15 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
+
+                            final patientBox = Hive.box<Patient>('patients');
+                            final currentDate = DateTime.now();
+                            final patientsForToday = patientBox.values
+                                .where((p) => p.appointmentDate == currentDate);
+                            final tokenNumber = patientsForToday.isEmpty
+                                ? 1
+                                : patientsForToday.length + 1;
+
                             final patient = Patient(
                               name: _nameController.text,
                               phone: int.parse(_phoneNumberController.text),
@@ -254,14 +263,14 @@ class _AppointmentFormState extends State<AppointmentForm> {
                               amountPaid:
                                   double.parse(_amountPaidController.text),
                               careOf: _careOfController.text,
-                              appointmentDate: DateTime.now(),
+                              appointmentDate: currentDate,
                               doctor: _selectedDoctor,
                               gender: _selectedGender,
                               reason: _reasonController.text,
+                              tokenNumber: tokenNumber,
                             );
-                            final box = Hive.box<Patient>('patients');
-                            box.add(patient);
-                            
+                            patientBox.add(patient);
+
                             resetFields();
                           }
                         },
