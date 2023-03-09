@@ -31,7 +31,7 @@ class Patient extends HiveObject {
   String careOf;
 
   @HiveField(8)
-  String appointmentDate;
+  DateTime appointmentDate;
 
   @HiveField(4)
   String doctor;

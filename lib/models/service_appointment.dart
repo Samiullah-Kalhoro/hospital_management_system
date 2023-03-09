@@ -34,5 +34,5 @@ class ServiceAppointment extends HiveObject {
   double amount;
 
   @HiveField(6)
-  String serviceAvailedDate;
+  DateTime serviceAvailedDate;
 }

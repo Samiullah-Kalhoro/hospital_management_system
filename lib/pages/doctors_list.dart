@@ -20,9 +20,9 @@ class DoctorListScreen extends StatelessWidget {
             itemCount: box.length,
             itemBuilder: (context, index) {
               final doctor = box.getAt(index);
-              final doctorIndex = doctor!.key;
+
               return ListTile(
-                leading: Text((doctorIndex + 1).toString()),
+                leading: Text((doctor!.index + 1).toString()),
                 title: Text(doctor.name),
                 subtitle: Text(doctor.specialization),
                 trailing: IconButton(
@@ -78,6 +78,13 @@ class DoctorListScreen extends StatelessWidget {
   void deleteDoctor(int index) {
     final box = Hive.box<Doctor>('doctors');
     box.deleteAt(index);
+
+// Update the index property of the remaining doctors
+    for (var i = 0; i < box.length; i++) {
+      final doctor = box.getAt(i);
+      doctor!.index = i;
+      doctor.save();
+    }
   }
 }
 
@@ -179,16 +186,19 @@ class _DoctorsListState extends State<DoctorsList> {
                 child: const Text('Save'),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    final box = Hive.box<Doctor>('doctors');
+                    final nextIndex = box.length;
                     final doctor = Doctor(
                       name: _nameController.text,
                       specialization: _specializationController.text,
                       phone: _phoneController.text,
                       email: _emailController.text,
                       gender: _selectedGender,
+                      index: nextIndex,
                     );
-                    final box = Hive.box<Doctor>('doctors');
 
                     box.add(doctor);
+                    Navigator.pop(context);
                   }
                 },
               ),

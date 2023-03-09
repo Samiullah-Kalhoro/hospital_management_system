@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive/hive.dart';
 
 part 'doctor.g.dart';
@@ -19,6 +20,9 @@ class Doctor extends HiveObject {
   @HiveField(4)
   String gender;
 
+  @HiveField(5)
+  int index;
+
   // Constructor
   Doctor({
     required this.name,
@@ -26,5 +30,6 @@ class Doctor extends HiveObject {
     required this.phone,
     required this.email,
     required this.gender,
+    required this.index,
   });
 }

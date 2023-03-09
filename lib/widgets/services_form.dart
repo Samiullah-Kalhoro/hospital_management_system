@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hospital_management_system/models/service_appointment.dart';
-import 'package:intl/intl.dart';
+
 
 import '../models/service.dart';
 
@@ -186,13 +186,14 @@ class _ServicesFormState extends State<ServicesForm> {
                               phone: int.parse(_phoneNumberController.text),
                               age: int.parse(_ageController.text),
                               amount: double.parse(_amountController.text),
-                              serviceAvailedDate: DateFormat.yMMMMd('en_US').format(DateTime.now()),
+                              serviceAvailedDate: DateTime.now(),
                               gender: _selectedGender,
                               selectedService: _selectedService,
                             );
                             final box = Hive.box<ServiceAppointment>(
                                 'serviceAppointments');
                             box.add(serviceAppointment);
+                            resetFields();
                           }
                         },
                       ),
@@ -205,5 +206,13 @@ class _ServicesFormState extends State<ServicesForm> {
         ),
       ),
     );
+  }
+
+  void resetFields() {
+    _formKey.currentState!.reset();
+    _nameController.clear();
+    _phoneNumberController.clear();
+    _ageController.clear();
+    _amountController.clear();
   }
 }

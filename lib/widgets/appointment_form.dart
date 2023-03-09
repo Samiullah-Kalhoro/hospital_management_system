@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:intl/intl.dart';
-// import 'package:intl/intl.dart';
 
 import '../models/doctor.dart';
 import '../models/patient.dart';
@@ -15,17 +13,19 @@ class AppointmentForm extends StatefulWidget {
 }
 
 class _AppointmentFormState extends State<AppointmentForm> {
+  final _formKey = GlobalKey<FormState>();
   final _ageController = TextEditingController();
   final _amountController = TextEditingController();
   final _amountPaidController = TextEditingController();
   final _careOfController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
   final List<String> _gender = ['Male', 'Female'];
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _reasonController = TextEditingController();
+
   // DateTime? _selectedDate;
+
   late String _selectedDoctor;
 
   late String _selectedGender;
@@ -70,7 +70,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
           children: [
             SizedBox(
               width: (MediaQuery.of(context).size.width - 300) * .7,
-              height: (MediaQuery.of(context).size.height) * .7,
+              height: (MediaQuery.of(context).size.height) * .8,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -254,13 +254,15 @@ class _AppointmentFormState extends State<AppointmentForm> {
                               amountPaid:
                                   double.parse(_amountPaidController.text),
                               careOf: _careOfController.text,
-                              appointmentDate: DateFormat.yMMMMd('en_US').format(DateTime.now()),
+                              appointmentDate: DateTime.now(),
                               doctor: _selectedDoctor,
                               gender: _selectedGender,
                               reason: _reasonController.text,
                             );
                             final box = Hive.box<Patient>('patients');
                             box.add(patient);
+                            
+                            resetFields();
                           }
                         },
                       ),
@@ -273,5 +275,16 @@ class _AppointmentFormState extends State<AppointmentForm> {
         ),
       ),
     );
+  }
+
+  void resetFields() {
+    _formKey.currentState!.reset();
+    _nameController.clear();
+    _phoneNumberController.clear();
+    _ageController.clear();
+    _amountController.clear();
+    _amountPaidController.clear();
+    _careOfController.clear();
+    _reasonController.clear();
   }
 }

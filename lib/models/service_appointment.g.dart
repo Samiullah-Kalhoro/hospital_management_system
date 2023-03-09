@@ -23,7 +23,7 @@ class ServiceAppointmentAdapter extends TypeAdapter<ServiceAppointment> {
       phone: fields[3] as int,
       selectedService: fields[4] as String,
       amount: fields[5] as double,
-      serviceAvailedDate: fields[6] as String,
+      serviceAvailedDate: fields[6] as DateTime,
     );
   }
 
