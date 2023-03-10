@@ -173,32 +173,31 @@ class _OverviewState extends State<Overview> {
                       ),
                     ),
                     SizedBox(
-                      // height: MediaQuery.of(context).size.height / 2.5,
-                      width: MediaQuery.of(context).size.width * .3,
-                      child: services.isEmpty
-                          ? const Center(
-                              child: Text(
-                                'No Data Available',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                ),
-                              ),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: services.length,
-                              itemBuilder: (context, index) {
-                                final service = services[index];
-                                return Card(
-                                  child: ListTile(
-                                    title: Text(service.serviceName),
-                                    trailing:
-                                        Text(service.serviceCount.toString()),
+                        // height: MediaQuery.of(context).size.height / 2.5,
+                        width: MediaQuery.of(context).size.width * .3,
+                        child: services.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  'No Data Available',
+                                  style: TextStyle(
+                                    color: Colors.red,
                                   ),
-                                );
-                              },
-                            ),
-                    ),
+                                ),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: services.length,
+                                itemBuilder: (context, index) {
+                                  final service = services[index];
+                                  return Card(
+                                    child: ListTile(
+                                      title: Text(service.serviceName),
+                                      trailing:
+                                          Text(service.serviceCount.toString()),
+                                    ),
+                                  );
+                                },
+                              )),
                   ],
                 ),
                 Column(

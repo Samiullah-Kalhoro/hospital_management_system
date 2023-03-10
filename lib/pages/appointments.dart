@@ -23,17 +23,20 @@ class _AppointmentsState extends State<Appointments>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(
-              text: 'Patient Appointment',
-            ),
-            Tab(
-              text: 'Services',
-            ),
-          ],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(
+                text: 'Patient Appointment',
+              ),
+              Tab(
+                text: 'Services',
+              ),
+            ],
+          ),
         ),
       ),
       body: TabBarView(

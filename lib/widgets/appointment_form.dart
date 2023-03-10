@@ -13,47 +13,65 @@ class AppointmentForm extends StatefulWidget {
 }
 
 class _AppointmentFormState extends State<AppointmentForm> {
+  final Map<String, TextEditingController> _controllers = {
+    'age': TextEditingController(),
+    'amount': TextEditingController(),
+    'amountPaid': TextEditingController(),
+    'careOf': TextEditingController(),
+    'name': TextEditingController(),
+    'phoneNumber': TextEditingController(),
+    'reason': TextEditingController(),
+  };
+
   final _formKey = GlobalKey<FormState>();
-  final _ageController = TextEditingController();
-  final _amountController = TextEditingController();
-  final _amountPaidController = TextEditingController();
-  final _careOfController = TextEditingController();
-
   final List<String> _gender = ['Male', 'Female'];
-  final _nameController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
-  final _reasonController = TextEditingController();
-
-  // DateTime? _selectedDate;
-
   late String _selectedDoctor;
-
   late String _selectedGender;
-  // TimeOfDay? _selectedTime;
 
-  // functions for selecting date and time
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //       context: context,
-  //       initialDate: DateTime.now(),
-  //       firstDate: DateTime.now(),
-  //       lastDate: DateTime(2100));
-  //   if (picked != null) {
-  //     setState(() {
-  //       _selectedDate = picked;
-  //     });
-  //   }
-  // }
+  @override
+  void dispose() {
+    _controllers.forEach((key, value) {
+      value.dispose();
+    });
 
-  // Future<void> _selectTime(BuildContext context) async {
-  //   final TimeOfDay? picked =
-  //       await showTimePicker(context: context, initialTime: TimeOfDay.now());
-  //   if (picked != null) {
-  //     setState(() {
-  //       _selectedTime = picked;
-  //     });
-  //   }
-  // }
+    super.dispose();
+  }
+
+  void resetFields() {
+    _formKey.currentState!.reset();
+    _controllers.forEach((key, value) {
+      value.clear();
+    });
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      final patientBox = Hive.box<Patient>('patients');
+      final currentDate = DateTime.now();
+      final patientsForToday =
+          patientBox.values.where((p) => p.appointmentDate == currentDate);
+      final tokenNumber =
+          patientsForToday.isEmpty ? 1 : patientsForToday.length + 1;
+
+      final patient = Patient(
+        name: _controllers['name']!.text,
+        phone: int.parse(_controllers['phoneNumber']!.text),
+        age: int.parse(_controllers['age']!.text),
+        amount: double.parse(_controllers['amount']!.text),
+        careOf: _controllers['careOf']!.text,
+        appointmentDate: currentDate,
+        doctor: _selectedDoctor,
+        gender: _selectedGender,
+        reason: _controllers['reason']!.text,
+        tokenNumber: tokenNumber,
+      );
+      patientBox.add(patient);
+
+      resetFields();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,26 +84,30 @@ class _AppointmentFormState extends State<AppointmentForm> {
       child: Form(
         key: _formKey,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: (MediaQuery.of(context).size.width - 300) * .7,
-              height: (MediaQuery.of(context).size.height) * .8,
+              width: (MediaQuery.of(context).size.width - 300) * .5,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Row(
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _nameController,
-                          decoration:
-                              const InputDecoration(labelText: 'Patient Name'),
+                          controller: _controllers['name'],
+                          keyboardType: TextInputType.name,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: const InputDecoration(
+                              labelText: 'Patient Name',
+                              border: OutlineInputBorder()),
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter patient\' name';
+                              return 'Please enter your name';
+                            } else if (value.length < 3) {
+                              return 'Name must be at least 3 characters';
+                            } else {
+                              return null;
                             }
-                            return null;
                           },
                         ),
                       ),
@@ -95,9 +117,11 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                           ],
-                          controller: _ageController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: _controllers['age'],
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Age'),
+                          decoration: const InputDecoration(
+                              labelText: 'Age', border: OutlineInputBorder()),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter patient\'s age';
@@ -113,8 +137,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     children: [
                       Expanded(
                         child: DropdownButtonFormField(
-                          decoration:
-                              const InputDecoration(labelText: 'Select Gender'),
+                          decoration: const InputDecoration(
+                              labelText: 'Select Gender',
+                              border: OutlineInputBorder()),
                           items: _gender.map((gender) {
                             return DropdownMenuItem(
                               value: gender,
@@ -137,16 +162,21 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       const SizedBox(width: 16.0),
                       Expanded(
                         child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                           ],
-                          controller: _phoneNumberController,
+                          controller: _controllers['phoneNumber'],
                           keyboardType: TextInputType.phone,
-                          decoration:
-                              const InputDecoration(labelText: 'Phone Number'),
+                          decoration: const InputDecoration(
+                              labelText: 'Phone Number',
+                              border: OutlineInputBorder()),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter your phone number';
+                            } else if (!RegExp(r'^0[0-9]{10}$')
+                                .hasMatch(value)) {
+                              return 'Please enter a valid phone number';
                             }
                             return null;
                           },
@@ -159,8 +189,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     children: [
                       Expanded(
                         child: DropdownButtonFormField(
-                          decoration:
-                              const InputDecoration(labelText: 'Select Doctor'),
+                          decoration: const InputDecoration(
+                              labelText: 'Select Doctor',
+                              border: OutlineInputBorder()),
                           items: doctorNames.map((doctor) {
                             return DropdownMenuItem(
                               value: doctor,
@@ -183,22 +214,11 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       const SizedBox(width: 16.0),
                       Expanded(
                         child: TextFormField(
-                          controller: _careOfController,
+                          controller: _controllers['careOf'],
                           keyboardType: TextInputType.name,
-                          decoration:
-                              const InputDecoration(labelText: 'Care of'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _reasonController,
-                          keyboardType: TextInputType.name,
-                          decoration:
-                              const InputDecoration(labelText: 'Reason'),
+                          decoration: const InputDecoration(
+                              labelText: 'Care of',
+                              border: OutlineInputBorder()),
                         ),
                       ),
                     ],
@@ -208,74 +228,50 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _amountController,
-                          decoration:
-                              const InputDecoration(labelText: 'Amount'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter Amount!';
-                            }
-                            return null;
-                          },
+                          controller: _controllers['reason'],
+                          keyboardType: TextInputType.name,
+                          decoration: const InputDecoration(
+                              labelText: 'Reason',
+                              border: OutlineInputBorder()),
                         ),
                       ),
-                      const SizedBox(
-                        width: 16.0,
-                      ),
+                      const SizedBox(width: 16.0),
                       Expanded(
                         child: TextFormField(
-                          controller: _amountPaidController,
-                          decoration:
-                              const InputDecoration(labelText: 'Amount Paid'),
+                          controller: _controllers['amount'],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          keyboardType: TextInputType.number,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: const InputDecoration(
+                              labelText: 'Amount',
+                              border: OutlineInputBorder()),
                           validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter Paid Amount!';
+                            if (value == null || value.isEmpty) {
+                              return 'Amount cannot be empty';
                             }
+
+                            if (double.tryParse(value) == null) {
+                              return 'Amount must be a number';
+                            }
+
+                            if (double.parse(value) <= 0) {
+                              return 'Amount must be greater than zero';
+                            }
+
                             return null;
                           },
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FilledButton(
-                        child: const Text('Submit'),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-
-                            final patientBox = Hive.box<Patient>('patients');
-                            final currentDate = DateTime.now();
-                            final patientsForToday = patientBox.values
-                                .where((p) => p.appointmentDate == currentDate);
-                            final tokenNumber = patientsForToday.isEmpty
-                                ? 1
-                                : patientsForToday.length + 1;
-
-                            final patient = Patient(
-                              name: _nameController.text,
-                              phone: int.parse(_phoneNumberController.text),
-                              age: int.parse(_ageController.text),
-                              amount: double.parse(_amountController.text),
-                              amountPaid:
-                                  double.parse(_amountPaidController.text),
-                              careOf: _careOfController.text,
-                              appointmentDate: currentDate,
-                              doctor: _selectedDoctor,
-                              gender: _selectedGender,
-                              reason: _reasonController.text,
-                              tokenNumber: tokenNumber,
-                            );
-                            patientBox.add(patient);
-
-                            resetFields();
-                          }
-                        },
-                      ),
-                    ],
+                  const SizedBox(height: 16.0),
+                  FilledButton(
+                    child: const Text('Submit'),
+                    onPressed: () {
+                      _submitForm();
+                    },
                   ),
                 ],
               ),
@@ -284,16 +280,5 @@ class _AppointmentFormState extends State<AppointmentForm> {
         ),
       ),
     );
-  }
-
-  void resetFields() {
-    _formKey.currentState!.reset();
-    _nameController.clear();
-    _phoneNumberController.clear();
-    _ageController.clear();
-    _amountController.clear();
-    _amountPaidController.clear();
-    _careOfController.clear();
-    _reasonController.clear();
   }
 }

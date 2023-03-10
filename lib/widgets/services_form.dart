@@ -13,15 +13,59 @@ class ServicesForm extends StatefulWidget {
 }
 
 class _ServicesFormState extends State<ServicesForm> {
-  final _formKey = GlobalKey<FormState>();
+  final Map<String, TextEditingController> _controllers = {
+    'name': TextEditingController(),
+    'phoneNumber': TextEditingController(),
+    'age': TextEditingController(),
+    'amount': TextEditingController(),
+  };
 
+  final _formKey = GlobalKey<FormState>();
   final List<String> _gender = ['Male', 'Female'];
-  final _nameController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
-  final _ageController = TextEditingController();
-  final _amountController = TextEditingController();
   late String _selectedGender;
   late String _selectedService;
+
+  @override
+  void dispose() {
+    _controllers.forEach((key, value) {
+      value.dispose();
+    });
+    super.dispose();
+  }
+
+  void resetFields() {
+    _formKey.currentState!.reset();
+    _controllers.forEach((key, value) {
+      value.clear();
+    });
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      final serviceBox = Hive.box<ServiceAppointment>('serviceAppointments');
+      final currentDate = DateTime.now();
+      final servicesForToday =
+          serviceBox.values.where((s) => s.serviceAvailedDate == currentDate);
+      final tokenNumber =
+          servicesForToday.isEmpty ? 1 : servicesForToday.length + 1;
+
+      final serviceAppointment = ServiceAppointment(
+        name: _controllers['name']!.text,
+        phone: int.parse(_controllers['phoneNumber']!.text),
+        age: int.parse(_controllers['age']!.text),
+        amount: double.parse(_controllers['amount']!.text),
+        serviceAvailedDate: currentDate,
+        gender: _selectedGender,
+        selectedService: _selectedService,
+        tokenNumber: tokenNumber,
+      );
+
+      serviceBox.add(serviceAppointment);
+      resetFields();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,26 +77,28 @@ class _ServicesFormState extends State<ServicesForm> {
       child: Form(
         key: _formKey,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: (MediaQuery.of(context).size.width - 300) * .7,
-              height: (MediaQuery.of(context).size.height) * .7,
+              width: (MediaQuery.of(context).size.width - 300) * .5,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Row(
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _nameController,
-                          decoration:
-                              const InputDecoration(labelText: 'Patient Name'),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: _controllers['name'],
+                          decoration: const InputDecoration(
+                              labelText: 'Patient Name',
+                              border: OutlineInputBorder()),
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter patient\' name';
+                              return 'Please enter your name';
+                            } else if (value.length < 3) {
+                              return 'Name must be at least 3 characters';
+                            } else {
+                              return null;
                             }
-                            return null;
                           },
                         ),
                       ),
@@ -62,9 +108,11 @@ class _ServicesFormState extends State<ServicesForm> {
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                           ],
-                          controller: _ageController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: _controllers['age'],
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Age'),
+                          decoration: const InputDecoration(
+                              labelText: 'Age', border: OutlineInputBorder()),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter patient\'s age';
@@ -80,8 +128,9 @@ class _ServicesFormState extends State<ServicesForm> {
                     children: [
                       Expanded(
                         child: DropdownButtonFormField(
-                          decoration:
-                              const InputDecoration(labelText: 'Select Gender'),
+                          decoration: const InputDecoration(
+                              labelText: 'Select Gender',
+                              border: OutlineInputBorder()),
                           items: _gender.map((gender) {
                             return DropdownMenuItem(
                               value: gender,
@@ -107,13 +156,18 @@ class _ServicesFormState extends State<ServicesForm> {
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                           ],
-                          controller: _phoneNumberController,
+                          controller: _controllers['phoneNumber'],
                           keyboardType: TextInputType.phone,
-                          decoration:
-                              const InputDecoration(labelText: 'Phone Number'),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: const InputDecoration(
+                              labelText: 'Phone Number',
+                              border: OutlineInputBorder()),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter your phone number';
+                            } else if (!RegExp(r'^0[0-9]{10}$')
+                                .hasMatch(value)) {
+                              return 'Please enter a valid phone number';
                             }
                             return null;
                           },
@@ -127,7 +181,8 @@ class _ServicesFormState extends State<ServicesForm> {
                       Expanded(
                         child: DropdownButtonFormField(
                           decoration: const InputDecoration(
-                              labelText: 'Select Service'),
+                              labelText: 'Select Service',
+                              border: OutlineInputBorder()),
                           items: serviceNames.map((service) {
                             return DropdownMenuItem(
                               value: service,
@@ -148,26 +203,30 @@ class _ServicesFormState extends State<ServicesForm> {
                         ),
                       ),
                       const SizedBox(width: 16.0),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  Row(
-                    children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _amountController,
-                          decoration:
-                              const InputDecoration(labelText: 'Amount'),
+                          controller: _controllers['amount'],
+                          keyboardType: TextInputType.number,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: const InputDecoration(
+                              labelText: 'Amount',
+                              border: OutlineInputBorder()),
                           validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter Amount!';
+                            if (value == null || value.isEmpty) {
+                              return 'Amount cannot be empty';
                             }
+
+                            if (double.tryParse(value) == null) {
+                              return 'Amount must be a number';
+                            }
+
+                            if (double.parse(value) <= 0) {
+                              return 'Amount must be greater than zero';
+                            }
+
                             return null;
                           },
                         ),
-                      ),
-                      const SizedBox(
-                        width: 16.0,
                       ),
                     ],
                   ),
@@ -178,32 +237,7 @@ class _ServicesFormState extends State<ServicesForm> {
                       FilledButton(
                         child: const Text('Submit'),
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-
-                            final serviceBox =
-                                Hive.box<ServiceAppointment>('serviceAppointments');
-                            final currentDate = DateTime.now();
-                            final servicesForToday = serviceBox.values.where(
-                                (s) => s.serviceAvailedDate == currentDate);
-                            final tokenNumber = servicesForToday.isEmpty
-                                ? 1
-                                : servicesForToday.length + 1;
-
-                            final serviceAppointment = ServiceAppointment(
-                              name: _nameController.text,
-                              phone: int.parse(_phoneNumberController.text),
-                              age: int.parse(_ageController.text),
-                              amount: double.parse(_amountController.text),
-                              serviceAvailedDate: currentDate,
-                              gender: _selectedGender,
-                              selectedService: _selectedService,
-                              tokenNumber: tokenNumber,
-                            );
-
-                            serviceBox.add(serviceAppointment);
-                            resetFields();
-                          }
+                          _submitForm();
                         },
                       ),
                     ],
@@ -215,13 +249,5 @@ class _ServicesFormState extends State<ServicesForm> {
         ),
       ),
     );
-  }
-
-  void resetFields() {
-    _formKey.currentState!.reset();
-    _nameController.clear();
-    _phoneNumberController.clear();
-    _ageController.clear();
-    _amountController.clear();
   }
 }
