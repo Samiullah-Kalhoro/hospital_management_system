@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-
 import '../models/service_appointment.dart';
 
 class ServicesAvailed extends StatefulWidget {
@@ -19,18 +18,19 @@ class _ServicesAvailedState extends State<ServicesAvailed> {
         title: const Text('Services Availed'),
       ),
       body: ValueListenableBuilder<Box<ServiceAppointment>>(
-        valueListenable: Hive.box<ServiceAppointment>('serviceAppointments').listenable(),
+        valueListenable:
+            Hive.box<ServiceAppointment>('serviceAppointments').listenable(),
         builder: (context, box, _) {
           return ListView.builder(
             itemCount: box.length,
             itemBuilder: (context, index) {
               final services = box.getAt(index);
-              final serviceIndex = services!.key;
-              return ListTile(
-                leading: Text((serviceIndex + 1).toString()),
-                title: Text(services.selectedService),
-                subtitle: Text('Service Name is ${services.name} and Token Number is ${services.tokenNumber}'),
 
+              return ListTile(
+                leading: Text(services!.index.toString()),
+                title: Text(services.selectedService),
+                subtitle: Text(
+                    'Service Name is ${services.name} and Token Number is ${services.tokenNumber}'),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
@@ -51,7 +51,8 @@ void showDeleteDialog(BuildContext context, int index) {
     context: context,
     builder: (context) => AlertDialog(
       title: const Text('Delete Availed Service?'),
-      content: const Text('Are you sure you want to delete this Availed Service?'),
+      content:
+          const Text('Are you sure you want to delete this Availed Service?'),
       actions: [
         TextButton(
           child: const Text('Cancel'),
@@ -62,7 +63,7 @@ void showDeleteDialog(BuildContext context, int index) {
         TextButton(
           child: const Text('Delete'),
           onPressed: () {
-            deletePatient(index);
+            deleteAvailedService(index);
             Navigator.pop(context);
           },
         ),
@@ -71,7 +72,13 @@ void showDeleteDialog(BuildContext context, int index) {
   );
 }
 
-void deletePatient(int index) {
+void deleteAvailedService(int index) {
   final box = Hive.box<ServiceAppointment>('serviceAppointments');
   box.deleteAt(index);
+  // Update the index property of the remaining services
+  for (var i = 0; i < box.length; i++) {
+    final service = box.getAt(i);
+    service!.index = i;
+    service.save();
+  }
 }

@@ -94,10 +94,7 @@ class _OverviewState extends State<Overview> {
     numberOfPatients = filteredPatients.length;
     numberOfServices = filteredServices.length;
 
-    // final doctorsList =
-    //     filteredPatients.map((patient) => patient.doctor).toList();
-    // final distinctDoctors = Set<String>.from(doctorsList).toList();
-    // print(distinctDoctors);
+   
   }
 
   @override

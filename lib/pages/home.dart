@@ -33,52 +33,54 @@ class _HomeState extends State<Home> {
       children: [
         // use SizedBox to constrain the AppMenu to a fixed width
         SizedBox(
-          width: 240,
-          child: Drawer(
-            shape: const ContinuousRectangleBorder(),
-            child: ListView(
-              padding: const EdgeInsets.all(10),
-              children: [
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Ayesha Medical Center',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 26),
+          width: 200,
+          child: ExcludeFocusTraversal(
+            child: Drawer(
+              shape: const ContinuousRectangleBorder(),
+              child: ListView(
+                padding: const EdgeInsets.all(10),
+                children: [
+                  DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Ayesha Medical Center',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 26),
+                      ),
                     ),
                   ),
-                ),
-                ListTile(
-                  selectedColor: Theme.of(context).colorScheme.secondary,
-                  style: ListTileStyle.drawer,
-                  horizontalTitleGap: 1,
-                  leading: const Icon(Icons.home),
-                  title: const Text('Overview'),
-                  selected: _selectedIndex == 0,
-                  onTap: () => _onPageTap(0),
-                ),
-                ListTile(
-                  selectedColor: Theme.of(context).colorScheme.secondary,
-                  style: ListTileStyle.drawer,
-                  horizontalTitleGap: 1,
-                  leading: const Icon(Ionicons.pencil),
-                  title: const Text('Appointments'),
-                  selected: _selectedIndex == 1,
-                  onTap: () => _onPageTap(1),
-                ),
-                ListTile(
-                  selectedColor: Theme.of(context).colorScheme.secondary,
-                  style: ListTileStyle.drawer,
-                  horizontalTitleGap: 1,
-                  leading: const Icon(Icons.admin_panel_settings),
-                  title: const Text('Admin Panel'),
-                  selected: _selectedIndex == 2,
-                  onTap: () => _onPageTap(2),
-                ),
-              ],
+                  ListTile(
+                    selectedColor: Theme.of(context).colorScheme.secondary,
+                    style: ListTileStyle.drawer,
+                    horizontalTitleGap: 1,
+                    leading: const Icon(Icons.home),
+                    title: const Text('Overview'),
+                    selected: _selectedIndex == 0,
+                    onTap: () => _onPageTap(0),
+                  ),
+                  ListTile(
+                    selectedColor: Theme.of(context).colorScheme.secondary,
+                    style: ListTileStyle.drawer,
+                    horizontalTitleGap: 1,
+                    leading: const Icon(Ionicons.pencil),
+                    title: const Text('Appointments'),
+                    selected: _selectedIndex == 1,
+                    onTap: () => _onPageTap(1),
+                  ),
+                  ListTile(
+                    selectedColor: Theme.of(context).colorScheme.secondary,
+                    style: ListTileStyle.drawer,
+                    horizontalTitleGap: 1,
+                    leading: const Icon(Icons.admin_panel_settings),
+                    title: const Text('Admin Panel'),
+                    selected: _selectedIndex == 2,
+                    onTap: () => _onPageTap(2),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

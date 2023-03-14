@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hospital_management_system/models/patient.dart';
-import 'package:intl/intl.dart';
 
 class PatientsList extends StatefulWidget {
   const PatientsList({super.key});
@@ -24,23 +23,11 @@ class _PatientsListState extends State<PatientsList> {
             itemCount: box.length,
             itemBuilder: (context, index) {
               final patient = box.getAt(index);
-              final patientIndex = patient!.key;
+
               return ListTile(
-                leading: Text((patientIndex + 1).toString()),
+                leading: Text(patient!.index.toString()),
                 title: Text(patient.name),
-                subtitle: Row(
-                  children: [
-                    Text(patient.age.toString()),
-                    const SizedBox(width: 10),
-                    Text(patient.gender),
-                    const SizedBox(width: 10),
-                    Text(DateFormat.yMMMMd().format(patient.appointmentDate)),
-                    const SizedBox(width: 10),
-                    Text('Token Number is ${patient.tokenNumber}'),
-                    const SizedBox(width: 10),
-                    Text('Phone Number is ${patient.phone}')
-                  ],
-                ),
+                subtitle: Row(),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
@@ -84,4 +71,11 @@ void showDeleteDialog(BuildContext context, int index) {
 void deletePatient(int index) {
   final box = Hive.box<Patient>('patients');
   box.deleteAt(index);
+
+  // Update the index property of the remaining patients
+  for (var i = 0; i < box.length; i++) {
+    final patient = box.getAt(i);
+    patient!.index = i;
+    patient.save();
+  }
 }

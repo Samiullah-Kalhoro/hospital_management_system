@@ -11,4 +11,5 @@ class Service extends HiveObject {
   Service({
     required this.serviceName,
   });
+  
 }
