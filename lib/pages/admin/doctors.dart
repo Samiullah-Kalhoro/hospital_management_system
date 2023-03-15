@@ -260,8 +260,3 @@ class _DoctorsState extends State<Doctors> {
   }
 }
 
-extension VerticalSpacing on Widget {
-  SizedBox aVS(double height) {
-    return SizedBox(height: height);
-  }
-}

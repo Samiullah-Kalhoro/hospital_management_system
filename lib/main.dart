@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hospital_management_system/authentication/login_screen.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:window_manager/window_manager.dart';
+
 
 import 'authentication/model/user.dart';
 import 'color_schemes.g.dart';
@@ -14,8 +14,6 @@ import 'models/service_appointment.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Must add this line.
-  await windowManager.ensureInitialized();
 
   final appDocumentDir = await getApplicationDocumentsDirectory();
 

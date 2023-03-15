@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hospital_management_system/authentication/model/user.dart';
-import 'package:window_manager/window_manager.dart';
 
 import '../pages/home.dart';
 
@@ -20,9 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    windowManager.setSize(const Size(800, 600));
-    windowManager.center();
-
     if (_userBox.values.isEmpty) {
       const userName = 'admin';
       const password = 'admin';
@@ -47,9 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (_userBox.values.any((user) => user.userName == enteredUsername)) {
       // Retrieve the associated password from the box
-      final savedPassword = _userBox.values.firstWhere(
-        (user) => user.userName == enteredUsername,
-      ).password;
+      final savedPassword = _userBox.values
+          .firstWhere(
+            (user) => user.userName == enteredUsername,
+          )
+          .password;
 
       // Compare the retrieved password with the entered password
       if (savedPassword == enteredPassword) {
