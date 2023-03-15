@@ -53,6 +53,8 @@ class _ServicesFormState extends State<ServicesForm> {
       final tokenNumber =
           servicesForToday.isEmpty ? 1 : servicesForToday.length + 1;
 
+      final nextIndex = serviceBox.isEmpty ? 1 : serviceBox.length + 1;
+
       final serviceAppointment = ServiceAppointment(
         name: _controllers['name']!.text,
         phone: int.parse(_controllers['phoneNumber']!.text),
@@ -62,7 +64,7 @@ class _ServicesFormState extends State<ServicesForm> {
         gender: _selectedGender,
         selectedService: _selectedService,
         tokenNumber: tokenNumber,
-        index: serviceBox.length,
+        index: nextIndex,
       );
 
       serviceBox.add(serviceAppointment);
@@ -82,6 +84,7 @@ class _ServicesFormState extends State<ServicesForm> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Form(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             key: _formKey,
             child: Row(
               children: [
@@ -101,8 +104,6 @@ class _ServicesFormState extends State<ServicesForm> {
                         children: [
                           Expanded(
                             child: TextFormField(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
                               controller: _controllers['name'],
                               decoration: const InputDecoration(
                                   labelText: 'Patient Name',
@@ -124,8 +125,6 @@ class _ServicesFormState extends State<ServicesForm> {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
                               controller: _controllers['age'],
                               keyboardType: TextInputType.number,
                               decoration: const InputDecoration(
@@ -176,8 +175,6 @@ class _ServicesFormState extends State<ServicesForm> {
                               ],
                               controller: _controllers['phoneNumber'],
                               keyboardType: TextInputType.phone,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
                               decoration: const InputDecoration(
                                   labelText: 'Phone Number',
                                   border: OutlineInputBorder()),
@@ -226,8 +223,6 @@ class _ServicesFormState extends State<ServicesForm> {
                             child: TextFormField(
                               controller: _controllers['amount'],
                               keyboardType: TextInputType.number,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
                               decoration: const InputDecoration(
                                   labelText: 'Amount',
                                   border: OutlineInputBorder()),
@@ -255,10 +250,8 @@ class _ServicesFormState extends State<ServicesForm> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FilledButton(
+                            onPressed: () => _submitForm(),
                             child: const Text('Submit'),
-                            onPressed: () {
-                              _submitForm();
-                            },
                           ),
                         ],
                       ),
@@ -300,7 +293,13 @@ class _ServicesFormState extends State<ServicesForm> {
                           final service = serviceAppointments[index];
                           return ListTile(
                             leading: Text((service.tokenNumber).toString()),
-                            title: Text(service.name),
+                            title: Text("${service.name} -- 0${service.phone}"),
+                            trailing: Text(service.amount.toString()),
+                            subtitle: Row(
+                              children: [
+                                Text(service.selectedService),
+                              ],
+                            ),
                           );
                         },
                       ),

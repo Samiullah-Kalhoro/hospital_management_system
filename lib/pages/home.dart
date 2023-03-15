@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hospital_management_system/pages/appointments.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:window_manager/window_manager.dart';
 
-import 'admin_panel.dart';
-import 'overview.dart';
+import 'admin/admin_panel.dart';
+import 'appointments.dart';
+import 'dashboard.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,7 +15,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   static List<Widget> pages = [
-    const Overview(),
+    const Dashboard(),
     const Appointments(),
     const AdminPanel(),
   ];
@@ -25,6 +26,12 @@ class _HomeState extends State<Home> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    windowManager.maximize();
+    super.initState();
   }
 
   @override
@@ -41,15 +48,9 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.all(10),
                 children: [
                   DrawerHeader(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Ayesha Medical Center',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 26),
-                      ),
+                    child: Image.asset(
+                      "assets/images/amc.png",
+                      fit: BoxFit.cover,
                     ),
                   ),
                   ListTile(
@@ -57,7 +58,7 @@ class _HomeState extends State<Home> {
                     style: ListTileStyle.drawer,
                     horizontalTitleGap: 1,
                     leading: const Icon(Icons.home),
-                    title: const Text('Overview'),
+                    title: const Text('Dashboard'),
                     selected: _selectedIndex == 0,
                     onTap: () => _onPageTap(0),
                   ),

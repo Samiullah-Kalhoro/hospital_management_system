@@ -1,11 +1,11 @@
 import 'package:hive/hive.dart';
 
-part 'patient.g.dart';
+part 'appointment.g.dart';
 
 @HiveType(typeId: 0)
-class Patient extends HiveObject {
+class Appointment extends HiveObject {
   // Constructor
-  Patient({
+  Appointment({
     required this.name,
     required this.age,
     required this.gender,

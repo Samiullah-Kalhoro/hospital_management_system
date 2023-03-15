@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'doctors_list.dart';
-import 'patients_list.dart';
+import 'doctors.dart';
+import 'appointments_list.dart';
 import 'services_availed.dart';
-import 'services_list.dart';
+import 'services.dart';
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({super.key});
@@ -24,31 +24,34 @@ class _AdminPanelState extends State<AdminPanel> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(
-              text: 'Doctors',
-            ),
-            Tab(
-              text: 'Services',
-            ),
-            Tab(
-              text: 'Patients Appointed',
-            ),
-            Tab(
-              text: 'Services Availed',
-            ),
-          ],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(
+                text: 'Doctors',
+              ),
+              Tab(
+                text: 'Services',
+              ),
+              Tab(
+                text: 'Patients Appointed',
+              ),
+              Tab(
+                text: 'Services Availed',
+              ),
+            ],
+          ),
         ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: const [
-          DoctorListScreen(),
-          ServicesListScreen(),
-          PatientsList(),
+          Doctors(),
+          Services(),
+          AppointmentsList(),
           ServicesAvailed(),
         ],
       ),

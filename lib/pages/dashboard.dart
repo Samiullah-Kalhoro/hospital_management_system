@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hospital_management_system/models/doctor_info.dart';
-import 'package:hospital_management_system/models/patient.dart';
+import 'package:hospital_management_system/models/appointment.dart';
 import 'package:hospital_management_system/models/service_appointment.dart';
 import 'package:hospital_management_system/models/service_info.dart';
 import 'package:intl/intl.dart';
 
-class Overview extends StatefulWidget {
-  const Overview({super.key});
+class Dashboard extends StatefulWidget {
+  const Dashboard({super.key});
 
   @override
-  State<Overview> createState() => _OverviewState();
+  State<Dashboard> createState() => _DashboardState();
 }
 
-class _OverviewState extends State<Overview> {
+class _DashboardState extends State<Dashboard> {
   DateTime? _selectedDate = DateTime.now();
 
   int numberOfPatients = 0;
@@ -35,7 +35,7 @@ class _OverviewState extends State<Overview> {
       return;
     }
 
-    final patientsBox = Hive.box<Patient>('patients');
+    final patientsBox = Hive.box<Appointment>('patients');
     final filteredPatients = patientsBox.values.where((patient) {
       final appointmentDate =
           DateFormat.yMMMMd('en_US').format(patient.appointmentDate);
@@ -93,8 +93,6 @@ class _OverviewState extends State<Overview> {
 
     numberOfPatients = filteredPatients.length;
     numberOfServices = filteredServices.length;
-
-   
   }
 
   @override
@@ -139,7 +137,6 @@ class _OverviewState extends State<Overview> {
                       ),
                     ),
                     SizedBox(
-                      // height: MediaQuery.of(context).size.height / 2.5,
                       width: MediaQuery.of(context).size.width * .3,
                       child: Card(
                         child: ListTile(
@@ -151,7 +148,6 @@ class _OverviewState extends State<Overview> {
                       ),
                     ),
                     SizedBox(
-                      // height: MediaQuery.of(context).size.height / 2.5,
                       width: MediaQuery.of(context).size.width * .3,
                       child: Card(
                         child: ListTile(
@@ -170,7 +166,6 @@ class _OverviewState extends State<Overview> {
                       ),
                     ),
                     SizedBox(
-                        // height: MediaQuery.of(context).size.height / 2.5,
                         width: MediaQuery.of(context).size.width * .3,
                         child: services.isEmpty
                             ? const Center(
@@ -207,7 +202,6 @@ class _OverviewState extends State<Overview> {
                       ),
                     ),
                     SizedBox(
-                      // height: MediaQuery.of(context).size.height / 2.5,
                       width: MediaQuery.of(context).size.width * .3,
                       child: doctorInfos.isEmpty
                           ? const Center(

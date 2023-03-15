@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'patient.dart';
+part of 'appointment.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PatientAdapter extends TypeAdapter<Patient> {
+class AppointmentAdapter extends TypeAdapter<Appointment> {
   @override
   final int typeId = 0;
 
   @override
-  Patient read(BinaryReader reader) {
+  Appointment read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Patient(
+    return Appointment(
       name: fields[0] as String,
       age: fields[1] as int,
       gender: fields[2] as String,
@@ -32,7 +32,7 @@ class PatientAdapter extends TypeAdapter<Patient> {
   }
 
   @override
-  void write(BinaryWriter writer, Patient obj) {
+  void write(BinaryWriter writer, Appointment obj) {
     writer
       ..writeByte(11)
       ..writeByte(1)
@@ -65,7 +65,7 @@ class PatientAdapter extends TypeAdapter<Patient> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PatientAdapter &&
+      other is AppointmentAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

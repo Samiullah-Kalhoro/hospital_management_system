@@ -4,7 +4,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 import '../models/doctor.dart';
-import '../models/patient.dart';
+import '../models/appointment.dart';
 
 class AppointmentForm extends StatefulWidget {
   const AppointmentForm({super.key});
@@ -49,7 +49,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final patientBox = Hive.box<Patient>('patients');
+      final patientBox = Hive.box<Appointment>('patients');
       final currentDate = DateTime.now();
       final patientsForToday = patientBox.values.where((p) =>
           DateFormat.yMMMMd('en_US').format(p.appointmentDate) ==
@@ -57,7 +57,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
       final tokenNumber =
           patientsForToday.isEmpty ? 1 : patientsForToday.length + 1;
 
-      final patient = Patient(
+      final nextIndex = patientBox.isEmpty ? 1 : patientBox.length + 1;
+
+      final patient = Appointment(
         name: _controllers['name']!.text,
         phone: int.parse(_controllers['phoneNumber']!.text),
         age: int.parse(_controllers['age']!.text),
@@ -68,7 +70,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
         gender: _selectedGender,
         reason: _controllers['reason']!.text,
         tokenNumber: tokenNumber,
-        index: patientBox.length,
+        index: nextIndex,
       );
       patientBox.add(patient);
 
@@ -310,8 +312,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
               SizedBox(
                 width: (MediaQuery.of(context).size.width - 300) * .5,
                 height: MediaQuery.of(context).size.height - 200,
-                child: ValueListenableBuilder<Box<Patient>>(
-                  valueListenable: Hive.box<Patient>('patients').listenable(),
+                child: ValueListenableBuilder<Box<Appointment>>(
+                  valueListenable:
+                      Hive.box<Appointment>('patients').listenable(),
                   builder: (context, box, _) {
                     final today = DateTime.now();
                     final todayPatients = box.values
@@ -328,7 +331,13 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           final patient = todayPatients[index];
                           return ListTile(
                             leading: Text((patient.tokenNumber).toString()),
-                            title: Text(patient.name),
+                            title: Text("${patient.name} -- 0${patient.phone}"),
+                            trailing: Text(patient.amount.toString()),
+                            subtitle: Row(
+                              children: [
+                                Text(patient.doctor),
+                              ],
+                            ),
                           );
                         },
                       ),
