@@ -583,7 +583,8 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       child: ListView.builder(
                         itemCount: todayPatients.length,
                         itemBuilder: (context, index) {
-                          final patient = todayPatients[index];
+                          final patient =
+                              todayPatients.reversed.toList()[index];
                           return ListTile(
                             leading: Text((patient.tokenNumber).toString()),
                             title: Text("${patient.name} -- 0${patient.phone}"),
@@ -591,6 +592,8 @@ class _AppointmentFormState extends State<AppointmentForm> {
                             subtitle: Row(
                               children: [
                                 Text(patient.doctor),
+                                const SizedBox(width: 8.0),
+                                
                               ],
                             ),
                           );

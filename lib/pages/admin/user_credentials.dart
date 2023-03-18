@@ -25,8 +25,8 @@ class _UserCredentialsState extends State<UserCredentials> {
       final box = Hive.box<User>('users');
 
       final user = User(
-          userName: _userNameController.text,
-          password: _passwordController.text);
+          userName: _userNameController.text.trim(),
+          password: _passwordController.text.trim());
 
       box.add(user);
       _resetFields();

@@ -530,7 +530,8 @@ class _ServicesFormState extends State<ServicesForm> {
                       child: ListView.builder(
                         itemCount: serviceAppointments.length,
                         itemBuilder: (context, index) {
-                          final service = serviceAppointments[index];
+                          final service =
+                              serviceAppointments.reversed.toList()[index];
                           return ListTile(
                             leading: Text((service.tokenNumber).toString()),
                             title: Text("${service.name} -- 0${service.phone}"),

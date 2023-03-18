@@ -39,8 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _login() {
-    final enteredUsername = _userNameController.text;
-    final enteredPassword = _passwordController.text;
+    final enteredUsername = _userNameController.text.trim();
+    final enteredPassword = _passwordController.text.trim();
 
     if (_userBox.values.any((user) => user.userName == enteredUsername)) {
       // Retrieve the associated password from the box
@@ -58,33 +58,18 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
       } else {
         // Password does not match, show an error message
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Login Failed'),
-            content: const Text('The password entered is incorrect.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
+        // Password does not match, show an error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Password does not match'),
           ),
         );
       }
     } else {
       // Username does not exist, show an error message
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Login Failed'),
-          content: const Text('The entered username does not exist.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Username does not exist'),
         ),
       );
     }
@@ -97,7 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: Form(
             key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -112,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: 300,
                   child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) => value!.isEmpty
                         ? 'Please enter a username'
                         : value.length < 3
@@ -128,6 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: 300,
                   child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) => value!.isEmpty
                         ? 'Please enter a password'
                         : value.length < 3
@@ -151,7 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-            
           ),
         ),
       ),
