@@ -1,10 +1,13 @@
+import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+
 import 'package:intl/intl.dart';
 
 import '../models/doctor.dart';
 import '../models/appointment.dart';
+import 'package:hospital_management_system/print_logic.dart';
 
 class AppointmentForm extends StatefulWidget {
   const AppointmentForm({super.key});
@@ -14,10 +17,11 @@ class AppointmentForm extends StatefulWidget {
 }
 
 class _AppointmentFormState extends State<AppointmentForm> {
+  final PrintLogic printLogic = PrintLogic();
+
   final Map<String, TextEditingController> _controllers = {
     'age': TextEditingController(),
     'amount': TextEditingController(),
-    'amountPaid': TextEditingController(),
     'careOf': TextEditingController(),
     'name': TextEditingController(),
     'phoneNumber': TextEditingController(),
@@ -45,7 +49,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
     });
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
@@ -72,6 +76,245 @@ class _AppointmentFormState extends State<AppointmentForm> {
         tokenNumber: tokenNumber,
         index: nextIndex,
       );
+
+      final profile = await CapabilityProfile.load(name: 'XP-N160I');
+      final generator = Generator(PaperSize.mm80, profile);
+
+      var bytes = generator.setGlobalCodeTable('CP1252');
+
+      bytes += generator.text(
+        'Asha Medical Center',
+        styles: const PosStyles(
+          align: PosAlign.center,
+          bold: true,
+          fontType: PosFontType.fontA,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+      );
+
+      bytes += generator.hr();
+      bytes += generator.text(
+        DateFormat.yMMMMd('en_US').format(DateTime.now()),
+        styles: const PosStyles(
+          align: PosAlign.left,
+          fontType: PosFontType.fontB,
+          height: PosTextSize.size1,
+        ),
+      );
+      bytes += generator.text(
+        DateFormat.jm().format(DateTime.now()),
+        styles: const PosStyles(
+          align: PosAlign.left,
+          fontType: PosFontType.fontB,
+          height: PosTextSize.size1,
+        ),
+      );
+      bytes += generator.hr();
+
+      bytes += generator.row([
+        PosColumn(
+          text: 'Patient Name:',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+        PosColumn(
+          text: _controllers['name']!.text.toUpperCase(), //name
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+      ]);
+
+      bytes += generator.row([
+        PosColumn(
+          text: 'Gender / Age:',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+        PosColumn(
+          text: '$_selectedGender / ${_controllers['age']!.text}',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+      ]);
+
+      bytes += generator.row([
+        PosColumn(
+          text: 'Contact No:',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+        PosColumn(
+          text: _controllers['phoneNumber']!.text,
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+      ]);
+
+      bytes += generator.row([
+        PosColumn(
+          text: 'Care of:',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+        PosColumn(
+          text: _controllers['careOf']!.text,
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+      ]);
+
+      bytes += generator.row([
+        PosColumn(
+          text: 'Reason:',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+        PosColumn(
+          text: _controllers['reason']!.text,
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+      ]);
+
+      bytes += generator.row([
+        PosColumn(
+          text: 'Doctor Name:',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+          ),
+        ),
+        PosColumn(
+          text: _selectedDoctor.toUpperCase(),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+            bold: true,
+            width: PosTextSize.size2,
+          ),
+        ),
+      ]);
+
+      bytes += generator.hr();
+
+      bytes += generator.row([
+        PosColumn(
+          text: 'Token No:',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.center,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+            bold: true,
+          ),
+        ),
+        PosColumn(
+          text: tokenNumber.toString(),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.center,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+            bold: true,
+          ),
+        ),
+      ]);
+
+      bytes += generator.hr();
+
+      bytes += generator.row([
+        PosColumn(
+          text: 'Charges',
+          width: 4,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+            bold: true,
+          ),
+        ),
+        PosColumn(
+          text: _controllers['amount']!.text,
+          width: 8,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size2,
+            width: PosTextSize.size3,
+            bold: true,
+          ),
+        ),
+      ]);
+
+      bytes += generator.feed(2);
+      bytes += generator.text('AMC',
+          styles: const PosStyles(
+            align: PosAlign.center,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+            bold: true,
+          ));
+      bytes += generator.feed(1);
+      bytes += generator.text('YOUR HEALTH, OUR PRIORITY',
+          styles: const PosStyles(
+            align: PosAlign.center,
+            fontType: PosFontType.fontA,
+            height: PosTextSize.size1,
+            width: PosTextSize.size1,
+            bold: true,
+          ));
+
+      await printLogic.printReceipt(bytes, generator);
+
       patientBox.add(patient);
 
       resetFields();
@@ -106,186 +349,198 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _controllers['name'],
-                              keyboardType: TextInputType.name,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              decoration: const InputDecoration(
-                                  labelText: 'Patient Name',
-                                  border: OutlineInputBorder()),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your name';
-                                } else if (value.length < 3) {
-                                  return 'Name must be at least 3 characters';
-                                } else {
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _controllers['name'],
+                                keyboardType: TextInputType.name,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                decoration: const InputDecoration(
+                                    labelText: 'Patient Name',
+                                    border: OutlineInputBorder()),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your name';
+                                  } else if (value.length < 3) {
+                                    return 'Name must be at least 3 characters';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 16.0),
+                            Expanded(
+                              child: TextFormField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                controller: _controllers['age'],
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                    labelText: 'Age',
+                                    border: OutlineInputBorder()),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter patient\'s age';
+                                  }
                                   return null;
-                                }
-                              },
+                                },
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Expanded(
-                            child: TextFormField(
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              controller: _controllers['age'],
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                  labelText: 'Age',
-                                  border: OutlineInputBorder()),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter patient\'s age';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 16.0),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: DropdownButtonFormField(
-                              decoration: const InputDecoration(
-                                  labelText: 'Select Gender',
-                                  border: OutlineInputBorder()),
-                              items: _gender.map((gender) {
-                                return DropdownMenuItem(
-                                  value: gender,
-                                  child: Text(gender),
-                                );
-                              }).toList(),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please select a gender';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedGender = value!;
-                                });
-                              },
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField(
+                                decoration: const InputDecoration(
+                                    labelText: 'Select Gender',
+                                    border: OutlineInputBorder()),
+                                items: _gender.map((gender) {
+                                  return DropdownMenuItem(
+                                    value: gender,
+                                    child: Text(gender),
+                                  );
+                                }).toList(),
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please select a gender';
+                                  }
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedGender = value!;
+                                  });
+                                },
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Expanded(
-                            child: TextFormField(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              controller: _controllers['phoneNumber'],
-                              keyboardType: TextInputType.phone,
-                              decoration: const InputDecoration(
-                                  labelText: 'Phone Number',
-                                  border: OutlineInputBorder()),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your phone number';
-                                } else if (!RegExp(r'^0[0-9]{10}$')
-                                    .hasMatch(value)) {
-                                  return 'Please enter a valid phone number';
-                                }
-                                return null;
-                              },
+                            const SizedBox(width: 16.0),
+                            Expanded(
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                controller: _controllers['phoneNumber'],
+                                keyboardType: TextInputType.phone,
+                                decoration: const InputDecoration(
+                                    labelText: 'Phone Number',
+                                    border: OutlineInputBorder()),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your phone number';
+                                  } else if (!RegExp(r'^0[0-9]{10}$')
+                                      .hasMatch(value)) {
+                                    return 'Please enter a valid phone number';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 16.0),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: DropdownButtonFormField(
-                              decoration: const InputDecoration(
-                                  labelText: 'Select Doctor',
-                                  border: OutlineInputBorder()),
-                              items: doctorNames.map((doctor) {
-                                return DropdownMenuItem(
-                                  value: doctor,
-                                  child: Text(doctor),
-                                );
-                              }).toList(),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please select a doctor';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedDoctor = value!;
-                                });
-                              },
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField(
+                                decoration: const InputDecoration(
+                                    labelText: 'Select Doctor',
+                                    border: OutlineInputBorder()),
+                                items: doctorNames.map((doctor) {
+                                  return DropdownMenuItem(
+                                    value: doctor,
+                                    child: Text(doctor),
+                                  );
+                                }).toList(),
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please select a doctor';
+                                  }
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedDoctor = value!;
+                                  });
+                                },
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _controllers['careOf'],
-                              keyboardType: TextInputType.name,
-                              decoration: const InputDecoration(
-                                  labelText: 'Care of',
-                                  border: OutlineInputBorder()),
+                            const SizedBox(width: 16.0),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _controllers['careOf'],
+                                keyboardType: TextInputType.name,
+                                decoration: const InputDecoration(
+                                    labelText: 'Care of',
+                                    border: OutlineInputBorder()),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 16.0),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _controllers['reason'],
-                              keyboardType: TextInputType.name,
-                              decoration: const InputDecoration(
-                                  labelText: 'Reason',
-                                  border: OutlineInputBorder()),
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _controllers['reason'],
+                                keyboardType: TextInputType.name,
+                                decoration: const InputDecoration(
+                                    labelText: 'Reason',
+                                    border: OutlineInputBorder()),
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _controllers['amount'],
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              keyboardType: TextInputType.number,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              decoration: const InputDecoration(
-                                  labelText: 'Amount',
-                                  border: OutlineInputBorder()),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Amount cannot be empty';
-                                }
+                            const SizedBox(width: 16.0),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _controllers['amount'],
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                keyboardType: TextInputType.number,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                decoration: const InputDecoration(
+                                    labelText: 'Amount',
+                                    border: OutlineInputBorder()),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Amount cannot be empty';
+                                  }
 
-                                if (double.tryParse(value) == null) {
-                                  return 'Amount must be a number';
-                                }
+                                  if (double.tryParse(value) == null) {
+                                    return 'Amount must be a number';
+                                  }
 
-                                if (double.parse(value) <= 0) {
-                                  return 'Amount must be greater than zero';
-                                }
+                                  if (double.parse(value) <= 0) {
+                                    return 'Amount must be greater than zero';
+                                  }
 
-                                return null;
-                              },
+                                  return null;
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 16.0),
                       FilledButton(

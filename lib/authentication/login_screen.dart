@@ -12,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -94,47 +95,63 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SizedBox(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Welcome to Asha Medical Center',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: 300,
-                child: TextFormField(
-                  controller: _userNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
+          child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Welcome to Asha Medical Center',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: 300,
-                child: TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 300,
+                  child: TextFormField(
+                    validator: (value) => value!.isEmpty
+                        ? 'Please enter a username'
+                        : value.length < 3
+                            ? 'Username must be at least 3 characters long'
+                            : null,
+                    controller: _userNameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                  obscureText: true,
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _login();
-                },
-                child: const Text('Login'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 300,
+                  child: TextFormField(
+                    validator: (value) => value!.isEmpty
+                        ? 'Please enter a password'
+                        : value.length < 3
+                            ? 'Password must be at least 3 characters long'
+                            : null,
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                    onEditingComplete: () => _login(),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    _login();
+                  },
+                  child: const Text('Login'),
+                ),
+              ],
+            ),
+            
           ),
         ),
       ),

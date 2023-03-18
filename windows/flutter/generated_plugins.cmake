@@ -3,8 +3,8 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  screen_retriever
-  window_manager
+  flutter_pos_printer_platform
+  network_info_plus
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

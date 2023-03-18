@@ -15,7 +15,8 @@ dependencies:
   intl: ^0.18.0
   ionicons: ^0.2.2
   path_provider: ^2.0.13
-  window_manager: ^0.3.1
+  flutter_pos_printer_platform: ^1.1.0
+  esc_pos_utils: ^1.1.0
 
   
 

@@ -3,7 +3,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hospital_management_system/authentication/login_screen.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 import 'authentication/model/user.dart';
 import 'color_schemes.g.dart';
 
@@ -47,9 +46,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-
       home: const LoginScreen(),
-      // home: const Home(),
     );
   }
 }

@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:window_manager/window_manager.dart';
 
-import 'home.dart';
+import '../admin_panel.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class AdminLogin extends StatefulWidget {
+  const AdminLogin({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<AdminLogin> createState() => _AdminLoginState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _AdminLoginState extends State<AdminLogin> {
   @override
-  void initState() {
-    windowManager.setSize(const Size(800, 600));
-    windowManager.center();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       body: SizedBox(
         child: Center(
@@ -58,9 +50,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const Home(),
-                  ));
+                  const AdminPanel();
                 },
                 child: const Text('Login'),
               ),
