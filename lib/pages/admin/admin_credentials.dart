@@ -30,6 +30,15 @@ class _AdminCredentialsState extends State<AdminCredentials> {
           password: _passwordController.text.trim());
 
       box.add(admin);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Changes Saved!'),
+          backgroundColor: Colors.green,
+          duration: Duration(milliseconds: 700),
+        ),
+      );
+
       _resetFields();
     }
   }
@@ -59,57 +68,68 @@ class _AdminCredentialsState extends State<AdminCredentials> {
                   child: ValueListenableBuilder<Box<Admin>>(
                     valueListenable: Hive.box<Admin>('admins').listenable(),
                     builder: (context, box, _) {
-                      return ListView.builder(
-                        itemCount: box.length,
-                        itemBuilder: (context, index) {
-                          final admin = box.getAt(index);
+                      return box.values.isEmpty
+                          ? const Center(
+                              child: Text(
+                                "No admin found! \nPlease add an admin.",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 24,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: box.length,
+                              itemBuilder: (context, index) {
+                                final admin = box.getAt(index);
 
-                          return Card(
-                            child: ListTile(
-                              title: Row(
-                                children: [
-                                  const Text(
-                                    'Username: ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
+                                return Card(
+                                  child: ListTile(
+                                    title: Row(
+                                      children: [
+                                        const Text(
+                                          'Username: ',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(
+                                          admin!.userName,
+                                        ),
+                                        const SizedBox(width: 16.0),
+                                        const Text(
+                                          'Password: ',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(
+                                          admin.password,
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () {
+                                            showEditDialog(context, index);
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {
+                                            showDeleteDialog(context, index);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                    admin!.userName,
-                                  ),
-                                  const SizedBox(width: 16.0),
-                                  const Text(
-                                    'Password: ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  Text(
-                                    admin.password,
-                                  ),
-                                ],
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () {
-                                      showEditDialog(context, index);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      showDeleteDialog(context, index);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
+                                );
+                              },
+                            );
                     },
                   ),
                 ),
@@ -203,6 +223,13 @@ class _AdminCredentialsState extends State<AdminCredentials> {
             onPressed: () {
               deleteAdmin(index);
               Navigator.pop(context);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Admin Deleted!'),
+                  duration: Duration(milliseconds: 700),
+                ),
+              );
             },
           ),
         ],
@@ -259,7 +286,7 @@ class _AdminCredentialsState extends State<AdminCredentials> {
             },
           ),
           TextButton(
-            child: const Text('Edit'),
+            child: const Text('Save'),
             onPressed: () {
               editAdmin(index, userNameEditController, passwordEditController);
               Navigator.pop(context);
@@ -285,5 +312,13 @@ class _AdminCredentialsState extends State<AdminCredentials> {
         password: passwordEditController.text);
 
     box.putAt(index, admin);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Changes Saved!'),
+        backgroundColor: Colors.green,
+        duration: Duration(milliseconds: 700),
+      ),
+    );
   }
 }

@@ -35,6 +35,7 @@ const lightColorScheme = ColorScheme(
 );
 
 const darkColorScheme = ColorScheme(
+  
   brightness: Brightness.dark,
   primary: Color(0xFFFFAFD5),
   onPrimary: Color(0xFF620041),
@@ -66,4 +67,5 @@ const darkColorScheme = ColorScheme(
   surfaceTint: Color(0xFFFFAFD5),
   outlineVariant: Color(0xFF504348),
   scrim: Color(0xFF000000),
+  
 );

@@ -27,7 +27,7 @@ class PrintLogic {
     );
   }
 
-  Future<void> print() async {
+  Future<void> testPrint() async {
     List<int> bytes = [];
 
     // Xprinter XP-N160I

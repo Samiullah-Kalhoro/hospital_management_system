@@ -32,6 +32,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
   final List<String> _gender = ['Male', 'Female'];
   late String _selectedDoctor;
   late String _selectedGender;
+  int? _tappedTileIndex;
 
   @override
   void dispose() {
@@ -585,15 +586,62 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         itemBuilder: (context, index) {
                           final patient =
                               todayPatients.reversed.toList()[index];
+
+                          final isTapped = _tappedTileIndex == index;
                           return ListTile(
-                            leading: Text((patient.tokenNumber).toString()),
-                            title: Text("${patient.name} -- 0${patient.phone}"),
-                            trailing: Text(patient.amount.toString()),
+                            leading: Text(
+                              (patient.tokenNumber).toString(),
+                              textAlign: TextAlign.center,
+                            ),
+                            title: Row(
+                              children: [
+                                SizedBox(
+                                    width: 130,
+                                    child: Text(
+                                      patient.name,
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 15,
+                                      ),
+                                    )),
+                                GestureDetector(
+                                    child: Text(
+                                      isTapped
+                                          ? "0${patient.phone}"
+                                          : 'Tap to show number',
+                                      style: TextStyle(
+                                        color: isTapped
+                                            ? Colors.white60
+                                            : Colors.white60,
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        if (_tappedTileIndex == index) {
+                                          // hide phone number if already tapped
+                                          _tappedTileIndex = null;
+                                        } else {
+                                          // show phone number of tapped tile
+                                          _tappedTileIndex = index;
+                                        }
+                                      });
+                                    }),
+                              ],
+                            ),
+                            trailing: SizedBox(
+                              width: 60,
+                              child: Text(
+                                patient.amount.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                             subtitle: Row(
                               children: [
                                 Text(patient.doctor),
                                 const SizedBox(width: 8.0),
-                                
                               ],
                             ),
                           );

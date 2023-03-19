@@ -62,6 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Password does not match'),
+            duration: Duration(milliseconds: 700),
           ),
         );
       }
@@ -70,6 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Username does not exist'),
+          duration: Duration(milliseconds: 700),
         ),
       );
     }
@@ -86,11 +88,16 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Welcome to Asha Medical Center',
+                  'Welcome to Asha Medical Centre',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white60,
                   ),
+                ),
+                Image.asset(
+                  'assets/images/amc.png',
+                  width: 300,
                 ),
                 const SizedBox(height: 20),
                 SizedBox(

@@ -29,6 +29,13 @@ class _UserCredentialsState extends State<UserCredentials> {
           password: _passwordController.text.trim());
 
       box.add(user);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('User added successfully'),
+          backgroundColor: Colors.green,
+          duration: Duration(milliseconds: 700),
+        ),
+      );
       _resetFields();
     }
   }
@@ -58,57 +65,68 @@ class _UserCredentialsState extends State<UserCredentials> {
                   child: ValueListenableBuilder<Box<User>>(
                     valueListenable: Hive.box<User>('users').listenable(),
                     builder: (context, box, _) {
-                      return ListView.builder(
-                        itemCount: box.length,
-                        itemBuilder: (context, index) {
-                          final user = box.getAt(index);
+                      return box.values.isEmpty
+                          ? const Center(
+                              child: Text(
+                                "No users found! \nPlease add an user.",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 24,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: box.length,
+                              itemBuilder: (context, index) {
+                                final user = box.getAt(index);
 
-                          return Card(
-                            child: ListTile(
-                              title: Row(
-                                children: [
-                                  const Text(
-                                    'Username: ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
+                                return Card(
+                                  child: ListTile(
+                                    title: Row(
+                                      children: [
+                                        const Text(
+                                          'Username: ',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(
+                                          user!.userName,
+                                        ),
+                                        const SizedBox(width: 16.0),
+                                        const Text(
+                                          'Password: ',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(
+                                          user.password,
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () {
+                                            showEditDialog(context, index);
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {
+                                            showDeleteDialog(context, index);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                    user!.userName,
-                                  ),
-                                  const SizedBox(width: 16.0),
-                                  const Text(
-                                    'Password: ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  Text(
-                                    user.password,
-                                  ),
-                                ],
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () {
-                                      showEditDialog(context, index);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      showDeleteDialog(context, index);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
+                                );
+                              },
+                            );
                     },
                   ),
                 ),
@@ -202,6 +220,12 @@ class _UserCredentialsState extends State<UserCredentials> {
             onPressed: () {
               deleteUser(index);
               Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('User Deleted!'),
+                  duration: Duration(milliseconds: 700),
+                ),
+              );
             },
           ),
         ],
@@ -258,7 +282,7 @@ class _UserCredentialsState extends State<UserCredentials> {
             },
           ),
           TextButton(
-            child: const Text('Edit'),
+            child: const Text('Save'),
             onPressed: () {
               editUser(index, userNameEditController, passwordEditController);
               Navigator.pop(context);
@@ -282,6 +306,14 @@ class _UserCredentialsState extends State<UserCredentials> {
     final user = User(
         userName: userNameEditController.text,
         password: passwordEditController.text);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: Colors.green,
+        content: Text('Changes saved!'),
+        duration: Duration(milliseconds: 700),
+      ),
+    );
 
     box.putAt(index, user);
   }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hospital_management_system/authentication/login_screen.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:hospital_management_system/authentication/login_screen.dart';
 
 import 'authentication/model/user.dart';
 import 'color_schemes.g.dart';
-
-import 'models/doctor.dart';
 import 'models/appointment.dart';
+import 'models/doctor.dart';
 import 'models/service.dart';
 import 'models/service_appointment.dart';
 import 'pages/admin/model/model/admin.dart';
@@ -48,8 +48,22 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.red[400],
+          contentTextStyle: const TextStyle(color: Colors.white),
+        ),
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.red[400],
+          contentTextStyle: const TextStyle(color: Colors.white),
+        ),
+      ),
       home: const LoginScreen(),
     );
   }

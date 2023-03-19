@@ -24,6 +24,7 @@ class _ServicesFormState extends State<ServicesForm> {
     'age': TextEditingController(),
     'amount': TextEditingController(),
   };
+  int? _tappedTileIndex;
 
   final _formKey = GlobalKey<FormState>();
   final List<String> _gender = ['Male', 'Female'];
@@ -160,27 +161,6 @@ class _ServicesFormState extends State<ServicesForm> {
         ),
         PosColumn(
           text: _controllers['phoneNumber']!.text,
-          width: 6,
-          styles: const PosStyles(
-            align: PosAlign.left,
-            fontType: PosFontType.fontA,
-            height: PosTextSize.size1,
-          ),
-        ),
-      ]);
-
-      bytes += generator.row([
-        PosColumn(
-          text: 'Reason:',
-          width: 6,
-          styles: const PosStyles(
-            align: PosAlign.left,
-            fontType: PosFontType.fontA,
-            height: PosTextSize.size1,
-          ),
-        ),
-        PosColumn(
-          text: _controllers['reason']?.text ?? 'N/A',
           width: 6,
           styles: const PosStyles(
             align: PosAlign.left,
@@ -532,13 +512,62 @@ class _ServicesFormState extends State<ServicesForm> {
                         itemBuilder: (context, index) {
                           final service =
                               serviceAppointments.reversed.toList()[index];
+
+                          final isTapped = _tappedTileIndex == index;
                           return ListTile(
-                            leading: Text((service.tokenNumber).toString()),
-                            title: Text("${service.name} -- 0${service.phone}"),
-                            trailing: Text(service.amount.toString()),
+                            leading: Text(
+                              (service.tokenNumber).toString(),
+                              textAlign: TextAlign.center,
+                            ),
+                            title: Row(
+                              children: [
+                                SizedBox(
+                                    width: 130,
+                                    child: Text(
+                                      service.name,
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 15,
+                                      ),
+                                    )),
+                                GestureDetector(
+                                    child: Text(
+                                      isTapped
+                                          ? "0${service.phone}"
+                                          : 'Tap to show number',
+                                      style: TextStyle(
+                                        color: isTapped
+                                            ? Colors.white60
+                                            : Colors.white60,
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        if (_tappedTileIndex == index) {
+                                          // hide phone number if already tapped
+                                          _tappedTileIndex = null;
+                                        } else {
+                                          // show phone number of tapped tile
+                                          _tappedTileIndex = index;
+                                        }
+                                      });
+                                    }),
+                              ],
+                            ),
+                            trailing: SizedBox(
+                              width: 60,
+                              child: Text(
+                                service.amount.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                             subtitle: Row(
                               children: [
                                 Text(service.selectedService),
+                                const SizedBox(width: 8.0),
                               ],
                             ),
                           );

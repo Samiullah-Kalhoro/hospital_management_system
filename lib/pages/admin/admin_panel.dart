@@ -69,6 +69,7 @@ class _AdminPanelState extends State<AdminPanel> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Password does not match'),
+            duration: Duration(milliseconds: 700),
           ),
         );
       }
@@ -77,6 +78,7 @@ class _AdminPanelState extends State<AdminPanel> with TickerProviderStateMixin {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Username does not exist'),
+          duration: Duration(milliseconds: 700),
         ),
       );
     }
