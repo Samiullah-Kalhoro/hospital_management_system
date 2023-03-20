@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import '../models/service_appointment.dart';
 
 import '../models/service.dart';
-import '../print_logic.dart';
+import '../core/print_logic.dart';
 
 class ServicesForm extends StatefulWidget {
   const ServicesForm({super.key});
@@ -460,6 +460,7 @@ class _ServicesFormState extends State<ServicesForm> {
 
                                   return null;
                                 },
+                                onEditingComplete: () => _submitForm(),
                               ),
                             ),
                           ],
@@ -506,74 +507,85 @@ class _ServicesFormState extends State<ServicesForm> {
                             DateFormat.yMMMMd('en_US').format(today))
                         .toList();
 
-                    return Card(
-                      child: ListView.builder(
-                        itemCount: serviceAppointments.length,
-                        itemBuilder: (context, index) {
-                          final service =
-                              serviceAppointments.reversed.toList()[index];
-
-                          final isTapped = _tappedTileIndex == index;
-                          return ListTile(
-                            leading: Text(
-                              (service.tokenNumber).toString(),
+                    return box.values.isEmpty
+                        ? const Center(
+                            child: Text(
+                              "No services today",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 24,
+                              ),
                               textAlign: TextAlign.center,
                             ),
-                            title: Row(
-                              children: [
-                                SizedBox(
-                                    width: 130,
+                          )
+                        : Card(
+                            child: ListView.builder(
+                              itemCount: serviceAppointments.length,
+                              itemBuilder: (context, index) {
+                                final service = serviceAppointments.reversed
+                                    .toList()[index];
+
+                                final isTapped = _tappedTileIndex == index;
+                                return ListTile(
+                                  leading: Text(
+                                    (service.tokenNumber).toString(),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  title: Row(
+                                    children: [
+                                      SizedBox(
+                                          width: 130,
+                                          child: Text(
+                                            service.name,
+                                            style: const TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 15,
+                                            ),
+                                          )),
+                                      GestureDetector(
+                                          child: Text(
+                                            isTapped
+                                                ? "0${service.phone}"
+                                                : 'Tap to show number',
+                                            style: TextStyle(
+                                              color: isTapped
+                                                  ? Colors.white60
+                                                  : Colors.white60,
+                                              fontSize: 14.0,
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              if (_tappedTileIndex == index) {
+                                                // hide phone number if already tapped
+                                                _tappedTileIndex = null;
+                                              } else {
+                                                // show phone number of tapped tile
+                                                _tappedTileIndex = index;
+                                              }
+                                            });
+                                          }),
+                                    ],
+                                  ),
+                                  trailing: SizedBox(
+                                    width: 60,
                                     child: Text(
-                                      service.name,
+                                      service.amount.toString(),
                                       style: const TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 15,
-                                      ),
-                                    )),
-                                GestureDetector(
-                                    child: Text(
-                                      isTapped
-                                          ? "0${service.phone}"
-                                          : 'Tap to show number',
-                                      style: TextStyle(
-                                        color: isTapped
-                                            ? Colors.white60
-                                            : Colors.white60,
-                                        fontSize: 14.0,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    onTap: () {
-                                      setState(() {
-                                        if (_tappedTileIndex == index) {
-                                          // hide phone number if already tapped
-                                          _tappedTileIndex = null;
-                                        } else {
-                                          // show phone number of tapped tile
-                                          _tappedTileIndex = index;
-                                        }
-                                      });
-                                    }),
-                              ],
-                            ),
-                            trailing: SizedBox(
-                              width: 60,
-                              child: Text(
-                                service.amount.toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            subtitle: Row(
-                              children: [
-                                Text(service.selectedService),
-                                const SizedBox(width: 8.0),
-                              ],
+                                  ),
+                                  subtitle: Row(
+                                    children: [
+                                      Text(service.selectedService),
+                                      const SizedBox(width: 8.0),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           );
-                        },
-                      ),
-                    );
                   },
                 ),
               ),

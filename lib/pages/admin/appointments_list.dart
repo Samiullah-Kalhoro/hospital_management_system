@@ -14,131 +14,142 @@ class _AppointmentsListState extends State<AppointmentsList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: ValueListenableBuilder<Box<Appointment>>(
         valueListenable: Hive.box<Appointment>('patients').listenable(),
         builder: (context, box, _) {
-          return ListView.builder(
-            itemCount: box.length,
-            itemBuilder: (context, index) {
-              final patient = box.getAt(index);
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Card(
-                  child: ListTile(
-                    leading: Text(patient!.index.toString()),
-                    title: Text(patient.name),
-                    subtitle: Row(
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              'Age:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              patient.age.toString(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 10),
-                        Row(
-                          children: [
-                            const Text(
-                              'Date:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              DateFormat.yMMMMd('en_US')
-                                  .format(patient.appointmentDate),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 10),
-                        Row(
-                          children: [
-                            const Text(
-                              'Phone:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              '0${patient.phone}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 10),
-                        Row(
-                          children: [
-                            const Text(
-                              'Amount:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              '${patient.amount}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 10),
-                        Row(
-                          children: [
-                            const Text(
-                              'Treated By:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              patient.doctor,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+          return box.values.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No Patients Record found!.",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 24,
                     ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        showDeleteDialog(context, index);
-                      },
-                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              );
-            },
-          );
+                )
+              : ListView.builder(
+                  itemCount: box.length,
+                  itemBuilder: (context, index) {
+                    final patients = box.values.toList();
+                    final patient = patients.reversed.toList()[index];
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Card(
+                        child: ListTile(
+                          leading: Text(patient.index.toString()),
+                          title: Text(patient.name),
+                          subtitle: Row(
+                            children: [
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Age:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    patient.age.toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Date:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    DateFormat.yMMMMd('en_US')
+                                        .format(patient.appointmentDate),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Phone:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    '0${patient.phone}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Amount:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${patient.amount}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Treated By:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    patient.doctor,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              showDeleteDialog(context, index);
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
         },
       ),
     );

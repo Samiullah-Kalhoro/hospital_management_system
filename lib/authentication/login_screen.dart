@@ -58,7 +58,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
       } else {
         // Password does not match, show an error message
-        // Password does not match, show an error message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Password does not match'),

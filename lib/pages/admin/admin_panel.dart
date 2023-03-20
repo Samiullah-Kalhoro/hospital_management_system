@@ -158,6 +158,8 @@ class _AdminPanelState extends State<AdminPanel> with TickerProviderStateMixin {
           child: AppBar(
             bottom: TabBar(
               controller: _tabController,
+              indicatorColor: Theme.of(context).colorScheme.secondary,
+              labelColor: Theme.of(context).colorScheme.secondary,
               tabs: const [
                 Tab(
                   text: 'Doctors',

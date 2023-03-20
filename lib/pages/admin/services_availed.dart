@@ -15,113 +15,123 @@ class _ServicesAvailedState extends State<ServicesAvailed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: ValueListenableBuilder<Box<ServiceAppointment>>(
         valueListenable:
             Hive.box<ServiceAppointment>('serviceAppointments').listenable(),
         builder: (context, box, _) {
-          return ListView.builder(
-            itemCount: box.length,
-            itemBuilder: (context, index) {
-              final services = box.getAt(index);
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Card(
-                  child: ListTile(
-                    leading: Text(services!.index.toString()),
-                    title: Text(services.name),
-                    subtitle: Row(
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              'Age:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              services.age.toString(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 10),
-                        Row(
-                          children: [
-                            const Text(
-                              'Date:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              DateFormat.yMMMMd('en_US')
-                                  .format(services.serviceAvailedDate),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 10),
-                        Row(
-                          children: [
-                            const Text(
-                              'Phone:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              '0${services.phone}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 10),
-                        Row(
-                          children: [
-                            const Text(
-                              'Amount:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              '${services.amount}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+          return box.values.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No Services Record found!.",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 24,
                     ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        showDeleteDialog(context, index);
-                      },
-                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              );
-            },
-          );
+                )
+              : ListView.builder(
+                  itemCount: box.length,
+                  itemBuilder: (context, index) {
+                    final services = box.getAt(index);
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Card(
+                        child: ListTile(
+                          leading: Text(services!.index.toString()),
+                          title: Text(services.name),
+                          subtitle: Row(
+                            children: [
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Age:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    services.age.toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Date:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    DateFormat.yMMMMd('en_US')
+                                        .format(services.serviceAvailedDate),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Phone:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    '0${services.phone}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Amount:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${services.amount}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              showDeleteDialog(context, index);
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
         },
       ),
     );

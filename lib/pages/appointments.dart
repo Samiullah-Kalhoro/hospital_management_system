@@ -28,6 +28,8 @@ class _AppointmentsState extends State<Appointments>
         child: AppBar(
           bottom: TabBar(
             controller: _tabController,
+            indicatorColor: Theme.of(context).colorScheme.secondary,
+            labelColor: Theme.of(context).colorScheme.secondary,
             tabs: const [
               Tab(
                 text: 'Patient Appointment',
