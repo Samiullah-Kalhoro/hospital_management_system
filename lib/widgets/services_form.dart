@@ -63,7 +63,7 @@ class _ServicesFormState extends State<ServicesForm> {
       final serviceAppointment = ServiceAppointment(
         name: _controllers['name']!.text,
         phone: int.parse(_controllers['phoneNumber']!.text),
-        age: int.parse(_controllers['age']!.text),
+        age: _controllers['age']!.text,
         amount: double.parse(_controllers['amount']!.text),
         serviceAvailedDate: currentDate,
         gender: _selectedGender,
@@ -329,11 +329,7 @@ class _ServicesFormState extends State<ServicesForm> {
                               child: TextFormField(
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
                                 controller: _controllers['age'],
-                                keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
                                     labelText: 'Age',
                                     border: OutlineInputBorder()),

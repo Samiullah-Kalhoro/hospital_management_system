@@ -67,7 +67,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
       final patient = Appointment(
         name: _controllers['name']!.text,
         phone: int.parse(_controllers['phoneNumber']!.text),
-        age: int.parse(_controllers['age']!.text),
+        age: _controllers['age']!.text,
         amount: double.parse(_controllers['amount']!.text),
         careOf: _controllers['careOf']!.text,
         appointmentDate: currentDate,
@@ -377,13 +377,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
                             const SizedBox(width: 16.0),
                             Expanded(
                               child: TextFormField(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 controller: _controllers['age'],
-                                keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
                                     labelText: 'Age',
                                     border: OutlineInputBorder()),

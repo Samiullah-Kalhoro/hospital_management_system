@@ -72,26 +72,38 @@ class _DoctorsState extends State<Doctors> {
                   child: ValueListenableBuilder<Box<Doctor>>(
                     valueListenable: Hive.box<Doctor>('doctors').listenable(),
                     builder: (context, box, _) {
-                      return ListView.builder(
-                        itemCount: box.length,
-                        itemBuilder: (context, index) {
-                          final doctor = box.getAt(index);
-
-                          return Card(
-                            child: ListTile(
-                              leading: Text((doctor!.index + 1).toString()),
-                              title: Text(doctor.name),
-                              subtitle: Text(doctor.specialization),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  showDeleteDialog(context, index);
-                                },
+                      return box.values.isEmpty
+                          ? const Center(
+                              child: Text(
+                                "No Doctors Record found!\nPlease add a doctor.",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 24,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                            ),
-                          );
-                        },
-                      );
+                            )
+                          : ListView.builder(
+                              itemCount: box.length,
+                              itemBuilder: (context, index) {
+                                final doctor = box.getAt(index);
+
+                                return Card(
+                                  child: ListTile(
+                                    leading:
+                                        Text((doctor!.index + 1).toString()),
+                                    title: Text(doctor.name),
+                                    subtitle: Text(doctor.specialization),
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () {
+                                        showDeleteDialog(context, index);
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
                     },
                   ),
                 ),
@@ -102,7 +114,6 @@ class _DoctorsState extends State<Doctors> {
             children: [
               const SizedBox(height: 16.0),
               Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey,
                 child: Row(
                   children: [
@@ -119,6 +130,8 @@ class _DoctorsState extends State<Doctors> {
                           ),
                           const SizedBox(height: 16.0),
                           TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             controller: _nameController,
                             decoration: const InputDecoration(
                               labelText: 'Name',
@@ -133,6 +146,8 @@ class _DoctorsState extends State<Doctors> {
                           ),
                           const SizedBox(height: 16.0),
                           TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             controller: _specializationController,
                             decoration: const InputDecoration(
                               labelText: 'Specialization',
@@ -147,6 +162,8 @@ class _DoctorsState extends State<Doctors> {
                           ),
                           const SizedBox(height: 16.0),
                           TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                             ],
@@ -157,13 +174,18 @@ class _DoctorsState extends State<Doctors> {
                             ),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter a phone number';
+                                return 'Please enter your phone number';
+                              } else if (!RegExp(r'^0[0-9]{10}$')
+                                  .hasMatch(value)) {
+                                return 'Please enter a valid phone number';
                               }
                               return null;
                             },
                           ),
                           const SizedBox(height: 16.0),
                           DropdownButtonFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             decoration: const InputDecoration(
                               labelText: 'Select Gender',
                               border: OutlineInputBorder(),
@@ -259,4 +281,3 @@ class _DoctorsState extends State<Doctors> {
     }
   }
 }
-

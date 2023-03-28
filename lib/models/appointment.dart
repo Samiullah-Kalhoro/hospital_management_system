@@ -20,7 +20,7 @@ class Appointment extends HiveObject {
   });
 
   @HiveField(1)
-  int age;
+  String age;
 
   @HiveField(6)
   double amount;

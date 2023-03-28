@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'admin_credentials.dart';
-import 'model/model/admin.dart';
+import 'model/admin.dart';
 import 'user_credentials.dart';
 import 'doctors.dart';
 import 'appointments_list.dart';

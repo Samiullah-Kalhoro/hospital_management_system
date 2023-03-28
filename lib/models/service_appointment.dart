@@ -21,7 +21,7 @@ class ServiceAppointment extends HiveObject {
   String name;
 
   @HiveField(1)
-  int age;
+  String age;
 
   @HiveField(2)
   String gender;

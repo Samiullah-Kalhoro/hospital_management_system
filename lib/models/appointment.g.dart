@@ -18,7 +18,7 @@ class AppointmentAdapter extends TypeAdapter<Appointment> {
     };
     return Appointment(
       name: fields[0] as String,
-      age: fields[1] as int,
+      age: fields[1] as String,
       gender: fields[2] as String,
       phone: fields[3] as int,
       doctor: fields[4] as String,

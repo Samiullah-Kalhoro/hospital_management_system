@@ -54,7 +54,7 @@ class _ServicesAvailedState extends State<ServicesAvailed> {
                                     ),
                                   ),
                                   Text(
-                                    services.age.toString(),
+                                    services.age,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                     ),

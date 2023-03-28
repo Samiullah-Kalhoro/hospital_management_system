@@ -10,7 +10,7 @@ import 'models/appointment.dart';
 import 'models/doctor.dart';
 import 'models/service.dart';
 import 'models/service_appointment.dart';
-import 'pages/admin/model/model/admin.dart';
+import 'pages/admin/model/admin.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'model/model/admin.dart';
+import 'model/admin.dart';
 
 class AdminCredentials extends StatefulWidget {
   const AdminCredentials({super.key});
