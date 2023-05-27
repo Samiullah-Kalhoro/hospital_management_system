@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Welcome to Asha Medical Centre',
+                  'Welcome to Asha Medical Clinics',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

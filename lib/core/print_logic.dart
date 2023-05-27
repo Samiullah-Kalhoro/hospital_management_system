@@ -36,7 +36,7 @@ class PrintLogic {
     final generator = Generator(PaperSize.mm80, profile);
     bytes += generator.setGlobalCodeTable('CP1252');
 
-    bytes += generator.text('Asha Medical Center',
+    bytes += generator.text('Asha Medical Clinics',
         styles: const PosStyles(
             align: PosAlign.center, underline: true, bold: true));
 
@@ -45,9 +45,10 @@ class PrintLogic {
 
     _printEscPos(bytes, generator);
   }
+
   Future<void> printReceipt(List<int> bytes, Generator generator) async {
-  _printEscPos(bytes, generator);
-}
+    _printEscPos(bytes, generator);
+  }
 
   /// print ticket
   void _printEscPos(List<int> bytes, Generator generator) async {
